@@ -1,6 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { readdirSync, statSync, writeFileSync } from 'node:fs'
+import { copyFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
@@ -21,15 +21,27 @@ function walkFiles(dir: string): string[] {
   return found
 }
 
+function siteBase(): string {
+  const raw = process.env.BASE_PATH?.trim()
+  if (!raw || raw === '/') return '/'
+  const withLeading = raw.startsWith('/') ? raw : `/${raw}`
+  return withLeading.endsWith('/') ? withLeading : `${withLeading}/`
+}
+
 function precacheServiceWorker(): Plugin {
+  let base = '/'
   return {
     name: 'nsnp-precache-sw',
     apply: 'build',
+    configResolved(config) {
+      base = config.base
+    },
     closeBundle() {
       const dist = path.resolve(rootDir, 'dist')
+      const prefix = base === '/' ? '' : base.replace(/\/$/, '')
       const files = walkFiles(dist)
-        .map((file) => `/${path.relative(dist, file).split(path.sep).join('/')}`)
-        .filter((file) => file !== '/sw.js')
+        .map((file) => `${prefix}/${path.relative(dist, file).split(path.sep).join('/')}`)
+        .filter((file) => file !== `${prefix}/sw.js`)
       const cacheName = `nsnp-${Date.now().toString(36)}`
       const source = `const CACHE = ${JSON.stringify(cacheName)}
 const ASSETS = ${JSON.stringify(files)}
@@ -69,17 +81,20 @@ self.addEventListener('fetch', (event) => {
           }
           return response
         })
-        .catch(() => (request.mode === 'navigate' ? caches.match('/index.html') : undefined))
+        .catch(() => (request.mode === 'navigate' ? caches.match(${JSON.stringify(`${prefix}/index.html`)}) : undefined))
     }),
   )
 })
 `
       writeFileSync(path.join(dist, 'sw.js'), source)
+      copyFileSync(path.join(dist, 'index.html'), path.join(dist, '404.html'))
+      writeFileSync(path.join(dist, '.nojekyll'), '')
     },
   }
 }
 
 export default defineConfig({
+  base: siteBase(),
   plugins: [react(), tailwindcss(), precacheServiceWorker()],
   resolve: {
     alias: {

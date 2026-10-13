@@ -2,21 +2,21 @@
   "name": "NSNP Learning — Eden and Central Karoo",
   "short_name": "NSNP",
   "description": "NSNP 2026 roadshow lessons for School Management Teams.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#f4f7fb",
   "theme_color": "#0b2545",
   "lang": "en",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
