@@ -1,0 +1,1629 @@
+{
+  "locale": "en",
+  "localesPlanned": ["en", "af", "xh"],
+  "editorNote": "Edit the words in this file to change the lessons. Keep every id the same. For Afrikaans or isiXhosa, copy this file to content.af.json or content.xh.json and translate the strings. Do not change ids, quiz answer numbers, times, or rand amounts unless the official rule has changed.",
+  "meta": {
+    "programme": "National School Nutrition Programme",
+    "shortName": "NSNP",
+    "district": "Eden and Central Karoo Education District",
+    "districtShort": "Eden & Central Karoo",
+    "province": "Western Cape Education Department",
+    "audience": "School Management Teams",
+    "year": "2026",
+    "presenters": ["L. Sampo", "L. Steyn"],
+    "documentTitle": "NSNP Learning · Eden and Central Karoo"
+  },
+  "ui": {
+    "skipToContent": "Skip to content",
+    "offline": "You are offline. Lessons already opened on this phone still work.",
+    "installHint": "Add this site to your home screen. After one full visit, the lessons open again when the signal is weak.",
+    "nav": {
+      "landmark": "Main",
+      "home": "Home",
+      "checklists": "Lists",
+      "deadlines": "Times",
+      "certificate": "Certificate"
+    },
+    "home": {
+      "kicker": "Western Cape Education Department",
+      "title": "NSNP 2026 roadshow",
+      "intro": "Short lessons for principals, School Management Team members, NSNP coordinators, and food handlers. Read the cards, then try the quiz. Ticks and scores stay on this phone.",
+      "passedLabel": "Modules passed",
+      "continue": "Continue",
+      "start": "Start with module 1",
+      "certificateReady": "Open your certificate",
+      "modulesTitle": "Modules",
+      "toolsTitle": "Keep these handy",
+      "toolDeadlines": "Deadlines and times",
+      "toolDeadlinesHint": "08:00, 12:30, 13:30, and the 7th",
+      "toolCalculator": "Meal quantities",
+      "toolCalculatorHint": "Estimate from the roadshow example",
+      "toolLists": "Checklists",
+      "toolListsHint": "Kitchen file, deliveries, monthly forms",
+      "notStarted": "Not started",
+      "inProgress": "In progress",
+      "passed": "Passed",
+      "minutes": "min",
+      "presenters": "Presenters",
+      "passNote": "Pass each quiz with 80% or more."
+    },
+    "module": {
+      "back": "All modules",
+      "keyRules": "Key rules",
+      "quizTitle": "Check yourself",
+      "quizIntro": "Answer every question, then check. You need 80% to pass this module.",
+      "checkAnswers": "Check answers",
+      "tryAgain": "Try again",
+      "thisTry": "This try",
+      "best": "Best",
+      "passed": "Passed",
+      "notPassed": "Not yet",
+      "answerAll": "Choose an answer for every question first.",
+      "correct": "Correct",
+      "notQuite": "Not quite",
+      "passMark": "Pass mark"
+    },
+    "checklists": {
+      "title": "Checklists",
+      "intro": "Tick these while you are in the kitchen, at the storeroom, or closing the month. Ticks stay on this phone.",
+      "done": "done",
+      "clear": "Clear ticks on this list",
+      "back": "All checklists",
+      "none": "Nothing ticked yet. Start at the top."
+    },
+    "deadlines": {
+      "title": "Deadlines and times",
+      "intro": "The times people mix up most often. Daily statistics are not the same deadline as the monthly forms.",
+      "toCalculator": "Estimate meal quantities",
+      "toHonorarium": "Look up the honorarium scale"
+    },
+    "calculator": {
+      "title": "Meal quantities",
+      "intro": "An estimate for planning. It uses the roadshow example for 500 secondary learners, scaled to your numbers.",
+      "disclaimer": "This is an estimate only. Before you order or cook, use the official WCED daily meal preparation quantity calculator. Enter the learners eating breakfast and the main meal, and your school type: Primary quintile 1–3 and special schools, Secondary quintile 1–3, or Primary and Secondary quintile 4–5.",
+      "breakfastLabel": "Learners eating breakfast",
+      "mainLabel": "Learners eating the main meal",
+      "schoolTypeLabel": "School type (for your notes)",
+      "schoolTypes": [
+        "Primary quintile 1–3 and special schools",
+        "Secondary quintile 1–3",
+        "Primary and Secondary quintile 4–5"
+      ],
+      "resultTitle": "Estimated quantities",
+      "empty": "Enter the number of learners to see quantities.",
+      "official": "School type is recorded here for your notes. This estimate does not change by quintile. The official WCED calculator does.",
+      "estimateTag": "Estimate"
+    },
+    "honorarium": {
+      "title": "Honorarium scale",
+      "intro": "April 2026. Choose the school size, then enter how many learners are fed.",
+      "small": "250 learners or fewer enrolled",
+      "large": "More than 250 learners enrolled",
+      "learnersLabel": "Learners fed",
+      "volunteers": "Volunteers",
+      "paidToSchool": "Paid to the school",
+      "learnersFed": "Learners fed",
+      "enter": "Enter the number of learners fed. Use at least 1.",
+      "smallTooHigh": "The small-school scale stops at 250 learners fed. Check the enrolment. If the school has more than 250 learners enrolled, use the other scale.",
+      "none": "No matching band. Check the number of learners fed.",
+      "scaleNote": "The monthly honorarium is R2,256.00 per volunteer. The amount paid to the school must match the scale below. Food handlers sign the proof of payment every month.",
+      "andAbove": "and above"
+    },
+    "certificate": {
+      "title": "Certificate",
+      "lockedTitle": "Finish the modules first",
+      "lockedBody": "Pass all 11 quizzes to unlock a certificate you can print or save. Your name and school are saved on this phone.",
+      "remaining": "Still to pass",
+      "nameLabel": "Your name",
+      "schoolLabel": "School",
+      "roleLabel": "Role",
+      "roles": [
+        "Principal",
+        "SMT member",
+        "NSNP coordinator",
+        "Food handler",
+        "Governing body member",
+        "RCL member",
+        "Other"
+      ],
+      "namePlaceholder": "Name and surname",
+      "schoolPlaceholder": "School name",
+      "previewKicker": "Western Cape Education Department",
+      "previewTitle": "NSNP roadshow learning record",
+      "body": "{name}, {role} at {school}, completed the NSNP 2026 roadshow lessons for School Management Teams in the Eden and Central Karoo Education District.",
+      "dateLabel": "Date",
+      "presentersLabel": "Roadshow presenters",
+      "disclaimer": "This is a learning record saved on this phone. It is not an official WCED certificate.",
+      "print": "Print or save",
+      "reset": "Clear progress on this phone",
+      "resetWarn": "This removes quiz scores, checklist ticks, and the name on this phone. It cannot be undone.",
+      "resetYes": "Yes, clear everything",
+      "resetNo": "Keep my progress",
+      "yourName": "Your name",
+      "yourSchool": "Your school",
+      "yourRole": "Your role"
+    },
+    "notFound": {
+      "title": "That page is not in the roadshow",
+      "body": "Go back to the module list and pick a lesson from there.",
+      "home": "Back to modules"
+    }
+  },
+  "modules": [
+    {
+      "id": "what-is-nsnp",
+      "number": 1,
+      "title": "What is the NSNP?",
+      "summary": "Why the programme exists, and who to call in the district.",
+      "minutes": 4,
+      "cards": [
+        {
+          "title": "Meals that help learners learn",
+          "paragraphs": [
+            "The National School Nutrition Programme (NSNP) is a government programme. It provides nutritious meals to learners in poorer primary and secondary schools.",
+            "The meals help learners concentrate and learn better."
+          ]
+        },
+        {
+          "title": "Healthy habits and school gardens",
+          "paragraphs": [
+            "The programme also teaches a healthy lifestyle. Schools are encouraged to grow vegetables and to use the garden as part of learning."
+          ]
+        },
+        {
+          "title": "Your Eden and Central Karoo team",
+          "paragraphs": [
+            "These are the district people who support schools on the NSNP. This roadshow is presented by L. Sampo and L. Steyn."
+          ],
+          "bullets": [
+            "Luzuko Sampo — Coordinator",
+            "Leandi Steyn — Liaison Officer",
+            "Denica Booysen — Extended Support Programme Assistant",
+            "Kelly May — Graduate Intern"
+          ]
+        }
+      ],
+      "keyRules": [
+        "The NSNP feeds learners in poorer primary and secondary schools so they can learn better.",
+        "It also teaches a healthy lifestyle and promotes school vegetable gardens.",
+        "Know your district team: Sampo, Steyn, Booysen, and May."
+      ],
+      "quiz": [
+        {
+          "id": "purpose",
+          "prompt": "What is the main purpose of the NSNP?",
+          "options": [
+            "To provide nutritious meals so learners in poorer schools can learn better",
+            "To replace the school tuck shop",
+            "To pay school fees for every learner",
+            "To supply fruit only on Fridays"
+          ],
+          "answer": 0,
+          "feedback": "The NSNP provides nutritious meals in poorer primary and secondary schools to improve learning."
+        },
+        {
+          "id": "more-than-meals",
+          "prompt": "Besides meals, what does the programme promote?",
+          "options": [
+            "Longer school days",
+            "A healthy lifestyle and school vegetable gardens",
+            "Private catering contracts",
+            "Extra homework for every grade"
+          ],
+          "answer": 1,
+          "feedback": "The NSNP teaches a healthy lifestyle and promotes school vegetable gardens."
+        },
+        {
+          "id": "coordinator",
+          "prompt": "Who is the Eden and Central Karoo NSNP coordinator?",
+          "options": [
+            "Leandi Steyn",
+            "Kelly May",
+            "Luzuko Sampo",
+            "Denica Booysen"
+          ],
+          "answer": 2,
+          "feedback": "Luzuko Sampo is the district NSNP coordinator. Leandi Steyn is the liaison officer."
+        },
+        {
+          "id": "liaison",
+          "prompt": "Who is the liaison officer?",
+          "options": [
+            "Denica Booysen",
+            "Leandi Steyn",
+            "Kelly May",
+            "Luzuko Sampo"
+          ],
+          "answer": 1,
+          "feedback": "Leandi Steyn is the liaison officer. Denica Booysen is the Extended Support Programme Assistant, and Kelly May is the graduate intern."
+        },
+        {
+          "id": "which-schools",
+          "prompt": "Which schools does the NSNP serve?",
+          "options": [
+            "Only high-fee private schools",
+            "Poorer primary and secondary schools",
+            "Only Grade R",
+            "Only hostel schools"
+          ],
+          "answer": 1,
+          "feedback": "The programme serves learners in poorer primary and secondary schools."
+        }
+      ]
+    },
+    {
+      "id": "preparation-area",
+      "number": 2,
+      "title": "Preparation area documents",
+      "summary": "What must be in the kitchen file and on the wall.",
+      "minutes": 5,
+      "cards": [
+        {
+          "title": "Keep these in the preparation area",
+          "paragraphs": [
+            "The preparation area is the kitchen where NSNP meals are made. These documents must be there, not only in the office."
+          ],
+          "bullets": [
+            "Feeding calendar",
+            "Menu",
+            "Measurements",
+            "Volunteer Food Handler (VFH) duty list — the annexure",
+            "Daily attendance register",
+            "Stock form",
+            "Kitchen equipment inventory",
+            "Disinfectant register",
+            "Compliance certificates",
+            "Posters for hygiene, gas safety, and food safety"
+          ]
+        },
+        {
+          "title": "Inventory and certificates",
+          "paragraphs": [
+            "The kitchen equipment inventory is on the school letterhead, dated, and signed by the principal. You may use the NSNP template instead.",
+            "Keep two certificates: the Certificate of Compliance (COC) for the gas installation, and the Certificate of Acceptability (COA) for the kitchen."
+          ]
+        },
+        {
+          "title": "Posters people can see",
+          "paragraphs": [
+            "Put the hygiene, gas safety, and food safety posters where food handlers work. A poster in a closed file does not help on a busy morning."
+          ]
+        }
+      ],
+      "keyRules": [
+        "The feeding calendar, menu, measurements, duty list, registers, stock form, and inventory stay in the preparation area.",
+        "The equipment inventory is dated and signed by the principal, or completed on the NSNP template.",
+        "Keep the COC and the COA with the kitchen documents.",
+        "Display hygiene, gas safety, and food safety posters."
+      ],
+      "quiz": [
+        {
+          "id": "where",
+          "prompt": "Where must the feeding calendar, menu, and measurements be kept?",
+          "options": [
+            "Only on the principal’s laptop",
+            "In the preparation area",
+            "At the district office only",
+            "In a learner’s homework book"
+          ],
+          "answer": 1,
+          "feedback": "These documents must be in the preparation area so the people who cook can use them."
+        },
+        {
+          "id": "inventory",
+          "prompt": "What must the kitchen equipment inventory show?",
+          "options": [
+            "Only the colour of the pots",
+            "The school letterhead, a date, and the principal’s signature — or the NSNP template",
+            "The tuck-shop price list",
+            "Learner exam marks"
+          ],
+          "answer": 1,
+          "feedback": "Use the school letterhead, date it, and have the principal sign it. The NSNP template is also acceptable."
+        },
+        {
+          "id": "certificates",
+          "prompt": "Which compliance certificates are required?",
+          "options": [
+            "Certificate of Compliance (COC) and Certificate of Acceptability (COA)",
+            "Only a fire-drill photo",
+            "A driver’s licence",
+            "A sports award"
+          ],
+          "answer": 0,
+          "feedback": "Keep the COC for the gas and the COA for the kitchen."
+        },
+        {
+          "id": "posters",
+          "prompt": "Which posters must be displayed?",
+          "options": [
+            "Sports-day posters only",
+            "Hygiene, gas safety, and food safety",
+            "The exam timetable only",
+            "No posters are needed"
+          ],
+          "answer": 1,
+          "feedback": "Display posters for hygiene, gas safety, and food safety in the preparation area."
+        },
+        {
+          "id": "duty-list",
+          "prompt": "The VFH duty list is also called what in this training?",
+          "options": [
+            "An invoice",
+            "A report card",
+            "An annexure",
+            "A menu cycle"
+          ],
+          "answer": 2,
+          "feedback": "The duty list is the annexure. It must be in the preparation area."
+        }
+      ]
+    },
+    {
+      "id": "volunteer-food-handlers",
+      "number": 3,
+      "title": "Volunteer food handlers",
+      "summary": "Documents, rotation, the April 2026 honorarium, and UIF.",
+      "minutes": 8,
+      "tool": "honorarium",
+      "cards": [
+        {
+          "title": "Send these to the district",
+          "paragraphs": [
+            "Send the volunteer food handler (VFH) pack to the district once a year, and again when a new VFH starts.",
+            "The school NSNP coordinator discusses duties with every new VFH. When a contract ends, rotate the volunteer."
+          ],
+          "bullets": [
+            "Food handler agreement form",
+            "Registration forms",
+            "A certified, clear copy of the identity document",
+            "Volunteer addendums"
+          ]
+        },
+        {
+          "title": "Honorarium from April 2026",
+          "paragraphs": [
+            "The honorarium is R2,256.00 per volunteer per month.",
+            "The amount the school receives depends on how many learners are fed, and on whether the school has more than 250 learners enrolled. Use the scale below. Proof of payment must match that scale."
+          ]
+        },
+        {
+          "title": "UIF and signatures",
+          "paragraphs": [
+            "Unemployment Insurance Fund (UIF) is R45.12 for 1 April 2026 to 31 March 2027. Keep proof of UIF registration and of the payments in the NSNP file.",
+            "Food handlers sign the proof of payment every month."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Send the agreement, registration forms, a certified clear ID copy, and the addendums once a year, and when a new VFH starts.",
+        "Rotate VFHs when a contract ends. The coordinator explains duties to each new volunteer.",
+        "From April 2026 the honorarium is R2,256.00 per volunteer per month. The school payment must match the scale.",
+        "Food handlers sign monthly. UIF is R45.12 from 1 April 2026 to 31 March 2027. Keep the proof."
+      ],
+      "quiz": [
+        {
+          "id": "when-send",
+          "prompt": "When must VFH documents go to the district?",
+          "options": [
+            "Every Monday",
+            "Once a year, or when a new VFH starts",
+            "Only after an audit",
+            "They never need to be sent"
+          ],
+          "answer": 1,
+          "feedback": "Send the pack once a year, and again whenever a new volunteer starts."
+        },
+        {
+          "id": "monthly-amount",
+          "prompt": "What is the April 2026 honorarium per volunteer per month?",
+          "options": [
+            "R1,500.00",
+            "R45.12",
+            "R2,256.00",
+            "R4,602.24"
+          ],
+          "answer": 2,
+          "feedback": "The honorarium is R2,256.00 per volunteer per month. R45.12 is the UIF amount. The higher figures are school totals on the scale."
+        },
+        {
+          "id": "small-school",
+          "prompt": "A school has 250 or fewer learners enrolled and feeds 200 learners. How many volunteers?",
+          "options": [
+            "1 volunteer",
+            "2 volunteers",
+            "4 volunteers",
+            "8 volunteers"
+          ],
+          "answer": 1,
+          "feedback": "On the small-school scale, 121 to 250 learners fed means 2 volunteers. The school is paid R4,602.24."
+        },
+        {
+          "id": "uif",
+          "prompt": "What is the UIF amount for 1 April 2026 to 31 March 2027?",
+          "options": [
+            "R45.12, with proof of registration and payment kept in the file",
+            "R2,256.00",
+            "UIF is not required",
+            "R230.00 per learner"
+          ],
+          "answer": 0,
+          "feedback": "UIF is R45.12 for that year. Keep proof of registration and of payments in the NSNP file."
+        },
+        {
+          "id": "proof",
+          "prompt": "What must the proof of payment show?",
+          "options": [
+            "Any round amount is fine",
+            "The amount must match the honorarium scale, and food handlers sign every month",
+            "Only the principal signs once a year",
+            "Payment can be made in groceries"
+          ],
+          "answer": 1,
+          "feedback": "The amount must match the scale, and each food handler signs every month."
+        }
+      ]
+    },
+    {
+      "id": "nsnp-committee",
+      "number": 4,
+      "title": "The NSNP committee",
+      "summary": "Who sits on it, and what each person must do.",
+      "minutes": 8,
+      "cards": [
+        {
+          "title": "Appoint the committee",
+          "flag": "Auditor-General finding · Minute 0001/2024 · High priority",
+          "paragraphs": [
+            "The principal appoints an NSNP school coordinator. An SMT member is recommended for this role.",
+            "Keep the term minutes, the member list, and the acceptance letters in the NSNP file."
+          ],
+          "bullets": [
+            "1 School Management Team (SMT) member",
+            "1 school governing body member",
+            "1 food handler",
+            "1 staff member, who is the coordinator",
+            "1 Representative Council of Learners (RCL) member — secondary schools only"
+          ]
+        },
+        {
+          "title": "Principal",
+          "paragraphs": [
+            "The principal is the accounting officer. The principal leads the programme and is responsible for overall management."
+          ],
+          "bullets": [
+            "Set feeding times from the Conditional Grant Framework, or the 10:00 and/or before 12:30 rule",
+            "Make sure VFHs have PPE: uniform, headgear, and safety boots",
+            "Kitchen Certificate of Acceptability from an Environmental Health Practitioner",
+            "Gas stove properly connected, with a Certificate of Compliance"
+          ]
+        },
+        {
+          "title": "SMT member",
+          "paragraphs": [
+            "The SMT member chairs the NSNP meetings and keeps the programme on the school’s agenda."
+          ],
+          "bullets": [
+            "Send invitations and keep the attendance register",
+            "Have a scribe take minutes, and keep those minutes in the NSNP file",
+            "Supervise the coordinator and check documents before they go to the district",
+            "Report problems to the principal and at SMT meetings"
+          ]
+        },
+        {
+          "title": "Governing body member",
+          "paragraphs": [
+            "The governing body member helps watch the programme day to day and takes NSNP matters to governing body meetings."
+          ],
+          "bullets": [
+            "Learners are fed on time",
+            "Learners are fed in the classroom under an educator’s supervision",
+            "VFHs cook according to the menu and wear PPE",
+            "Gas cylinders are in a cage outside the kitchen and are properly connected"
+          ]
+        },
+        {
+          "title": "Food handler member",
+          "paragraphs": [
+            "The food handler speaks for the volunteers and for the kitchen."
+          ],
+          "bullets": [
+            "Report VFH challenges and what help they need",
+            "Give the coordinator a daily food update",
+            "Suggest improvements",
+            "Prepare the correct quantities for the menu"
+          ]
+        },
+        {
+          "title": "Coordinator",
+          "paragraphs": [
+            "The coordinator runs the programme day to day."
+          ],
+          "bullets": [
+            "Monitor VFHs and do the daily admin",
+            "Accept stock deliveries, or assign the caretaker or a VFH",
+            "Take committee minutes and train the committee",
+            "Do physical stock-taking and reconciliation",
+            "Tell the district about new VFHs",
+            "Keep signed contracts and ID copies, and induct new VFHs",
+            "Make sure VFHs attend training on committee roles, health and hygiene, and food and gas safety"
+          ]
+        },
+        {
+          "title": "RCL member (secondary schools)",
+          "paragraphs": [
+            "Primary schools do not add an RCL member. At a secondary school, the RCL member brings the learners’ view."
+          ],
+          "bullets": [
+            "Say whether feeding is on time and whether both meals follow the menu",
+            "Comment on food quality, especially fruit and vegetables",
+            "Help serve in class and collect utensils",
+            "Report poor supervision, utensil shortages, and learner suggestions"
+          ]
+        }
+      ],
+      "keyRules": [
+        "Minute 0001/2024 is an Auditor-General finding and a high priority. The committee must exist and must meet.",
+        "The principal appoints the coordinator. An SMT member is the recommended choice.",
+        "Secondary schools include an RCL member. Primary schools do not.",
+        "Keep term minutes, the member list, and acceptance letters in the NSNP file."
+      ],
+      "quiz": [
+        {
+          "id": "who-appoints",
+          "prompt": "Who appoints the NSNP school coordinator?",
+          "options": [
+            "The food handler",
+            "The principal",
+            "The RCL",
+            "The delivery driver"
+          ],
+          "answer": 1,
+          "feedback": "The principal appoints the coordinator. An SMT member is recommended."
+        },
+        {
+          "id": "rcl",
+          "prompt": "Which committee member is for secondary schools only?",
+          "options": [
+            "The SMT member",
+            "The governing body member",
+            "The RCL member",
+            "The food handler"
+          ],
+          "answer": 2,
+          "feedback": "The RCL member sits on the committee at secondary schools only."
+        },
+        {
+          "id": "check-documents",
+          "prompt": "Who checks documents before they are sent to the district?",
+          "options": [
+            "The SMT member, who supervises the coordinator",
+            "Only the learners",
+            "The delivery driver",
+            "The RCL member alone"
+          ],
+          "answer": 0,
+          "feedback": "The SMT member supervises the coordinator and checks documents before submission."
+        },
+        {
+          "id": "coa-duty",
+          "prompt": "Who is responsible for the kitchen Certificate of Acceptability?",
+          "options": [
+            "The RCL member",
+            "The fruit supplier",
+            "The principal, as accounting officer",
+            "A parent with no committee role"
+          ],
+          "answer": 2,
+          "feedback": "The principal must make sure the kitchen has a Certificate of Acceptability from an Environmental Health Practitioner."
+        },
+        {
+          "id": "file",
+          "prompt": "What committee records must stay in the NSNP file?",
+          "options": [
+            "Only photos of meals",
+            "Term minutes, the member list, and acceptance letters",
+            "Learner report cards",
+            "Sports fixtures"
+          ],
+          "answer": 1,
+          "feedback": "Keep minutes for each term, the member list, and the acceptance letters in the NSNP file."
+        }
+      ]
+    },
+    {
+      "id": "monthly-forms",
+      "number": 5,
+      "title": "Monthly forms",
+      "summary": "Three forms before the 7th, completed daily — not at month end.",
+      "minutes": 7,
+      "cards": [
+        {
+          "title": "Three forms, one deadline",
+          "paragraphs": [
+            "Send these three forms to the district before the 7th of the following month.",
+            "The registers are daily records. Do not complete them only at month end. Do not fill them in ahead of time."
+          ],
+          "bullets": [
+            "Daily feeding and volunteer attendance register — fill it in every day",
+            "Stock monitoring — fill it in every day",
+            "Volunteer proof of payment — complete it at month end"
+          ]
+        },
+        {
+          "title": "Attendance register",
+          "paragraphs": [
+            "Write these on the register each feeding day."
+          ],
+          "bullets": [
+            "The date",
+            "The menu number: Monday 1, Tuesday 2, Wednesday 3, Thursday 4, Friday 5",
+            "The time the main meal was fed",
+            "The number of learners fed"
+          ]
+        },
+        {
+          "title": "Stock form",
+          "flag": "High priority",
+          "paragraphs": [
+            "The coordinator checks that the balance on the form matches the storeroom.",
+            "Opening stock is what was left from the previous month. Record the first and second deliveries.",
+            "Only the NSNP coordinator fills the stock-left column. A VFH must not fill that column.",
+            "Record bags opened, by date. Write weekly deliveries at the bottom of the form.",
+            "Email the form every month. It needs the coordinator’s name, the school stamp, and the name of the person who takes stock out."
+          ]
+        },
+        {
+          "title": "What is on the electronic stock form",
+          "paragraphs": [
+            "Dry items, with the pack size used on the form:"
+          ],
+          "bullets": [
+            "Rice 10 kg",
+            "Soya curry 10 kg",
+            "Samp 10 kg",
+            "Beans 5 kg",
+            "Tomato pilchards 400 g",
+            "Chicken livers 425 g",
+            "Breyani mix 1 kg",
+            "Lentils 500 g",
+            "Salt 500 g",
+            "Oil 2 L",
+            "Maize meal 10 kg",
+            "Instant porridge, strawberry and banana, 10 kg — record each flavour"
+          ]
+        },
+        {
+          "title": "Fresh items and the columns",
+          "paragraphs": [
+            "Fresh items can arrive in up to five deliveries: butternut or pumpkin, cabbage, carrots, fruit, milk, and onions.",
+            "Columns on the form: opening stock, deliveries, daily use for days 1 to 31, total used, transferred or food parcels, stock balance, and stocktaking balance."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Three forms reach the district before the 7th of the next month.",
+        "Complete the attendance register and the stock form every day. Never only at month end, and never in advance.",
+        "Only the NSNP coordinator fills the stock-left column.",
+        "Opening stock is last month’s leftover. Email the stock form with the coordinator’s name and the school stamp."
+      ],
+      "quiz": [
+        {
+          "id": "deadline",
+          "prompt": "By when must the three monthly forms reach the district?",
+          "options": [
+            "Before the 7th of the following month",
+            "On the last Friday of the term",
+            "Only when an auditor visits",
+            "Before 13:30 every day"
+          ],
+          "answer": 0,
+          "feedback": "The three monthly forms are due before the 7th of the next month. Daily feeding statistics are the 13:30 deadline. They are different."
+        },
+        {
+          "id": "daily",
+          "prompt": "When must the attendance register and the stock form be completed?",
+          "options": [
+            "Only at month end",
+            "In advance for the whole month",
+            "Every day",
+            "Once a term"
+          ],
+          "answer": 2,
+          "feedback": "Fill both in every day. Do not catch up at month end and do not write them in advance."
+        },
+        {
+          "id": "stock-left",
+          "prompt": "Who may fill in the stock-left column?",
+          "options": [
+            "Any VFH",
+            "Only the NSNP coordinator",
+            "The delivery driver",
+            "A learner"
+          ],
+          "answer": 1,
+          "feedback": "Only the NSNP coordinator fills the stock-left column. This is a high priority."
+        },
+        {
+          "id": "menu-number",
+          "prompt": "What is Monday’s menu number on the attendance register?",
+          "options": [
+            "5",
+            "3",
+            "1",
+            "There is no menu number"
+          ],
+          "answer": 2,
+          "feedback": "Monday is 1, Tuesday is 2, Wednesday is 3, Thursday is 4, and Friday is 5."
+        },
+        {
+          "id": "opening",
+          "prompt": "What is opening stock?",
+          "options": [
+            "The first delivery of the new month only",
+            "Stock left from the previous month",
+            "Whatever is written on the menu",
+            "Food that has already been cooked"
+          ],
+          "answer": 1,
+          "feedback": "Opening stock is what was left at the end of the previous month."
+        }
+      ]
+    },
+    {
+      "id": "menu-and-times",
+      "number": 6,
+      "title": "Menu, measurements, and times",
+      "summary": "The three food groups, quantities, and when meals must be finished.",
+      "minutes": 6,
+      "tool": "meal-estimate",
+      "cards": [
+        {
+          "title": "Three food groups every day",
+          "paragraphs": [
+            "Every NSNP meal has three food groups: starch, protein, and vegetables or fruit.",
+            "Milk is served on Wednesdays. Fruit is served on Tuesdays. Maize is served every day."
+          ]
+        },
+        {
+          "title": "How much to cook",
+          "paragraphs": [
+            "Use the WCED daily meal preparation quantity calculator. Enter how many learners eat breakfast and how many eat the main meal, and the school type.",
+            "The roadshow example is for 500 secondary learners: breakfast porridge 10 kg, rice 25 kg, samp 30 kg, soya mince 17.5 kg, lentils 5 kg, sugar beans 20 kg, 75 tins of pilchards, 70 tins of chicken livers, 500 UHT milk sachets of 200 ml, 40 kg of cabbage, butternut, or carrots, and 500 fruit.",
+            "The calculator on this page scales that example. It is an estimate. The official WCED calculator is the one to follow."
+          ]
+        },
+        {
+          "title": "When feeding must be finished",
+          "paragraphs": [
+            "Breakfast is finished by 08:00. The main meal is finished before 12:30.",
+            "The principal sets feeding times from the Conditional Grant Framework, or the 10:00 and/or before 12:30 rule.",
+            "If the school cannot keep these times, send a request to the district officials before you change them."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Every day: starch, protein, and vegetables or fruit. Milk on Wednesdays, fruit on Tuesdays, maize every day.",
+        "Quantities on this app are an estimate from the 500-learner example. Use the official WCED calculator before you order or cook.",
+        "Breakfast is finished by 08:00. The main meal is finished before 12:30.",
+        "A change to feeding times needs a request to the district officials."
+      ],
+      "quiz": [
+        {
+          "id": "groups",
+          "prompt": "Which three food groups are served every day?",
+          "options": [
+            "Starch, protein, and vegetables or fruit",
+            "Only bread and juice",
+            "Sweets, chips, and milk",
+            "Meat only"
+          ],
+          "answer": 0,
+          "feedback": "Each day includes starch, protein, and vegetables or fruit."
+        },
+        {
+          "id": "milk-day",
+          "prompt": "On which day is milk served?",
+          "options": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Friday"
+          ],
+          "answer": 2,
+          "feedback": "Milk is served on Wednesdays. Fruit is served on Tuesdays. Maize is served every day."
+        },
+        {
+          "id": "breakfast-time",
+          "prompt": "By when must breakfast be finished?",
+          "options": [
+            "08:00",
+            "10:30",
+            "12:30",
+            "13:30"
+          ],
+          "answer": 0,
+          "feedback": "Breakfast is finished by 08:00. 13:30 is the deadline for daily statistics, not for breakfast."
+        },
+        {
+          "id": "main-time",
+          "prompt": "By when must the main meal be finished?",
+          "options": [
+            "08:00",
+            "Before 12:30",
+            "After 14:00",
+            "Whenever the kitchen is ready"
+          ],
+          "answer": 1,
+          "feedback": "The main meal is finished before 12:30."
+        },
+        {
+          "id": "deviation",
+          "prompt": "What should the school do if it cannot keep the feeding times?",
+          "options": [
+            "Ignore the times",
+            "Stop feeding",
+            "Request permission from the district officials",
+            "Feed only on Fridays"
+          ],
+          "answer": 2,
+          "feedback": "Deviations need a request to the district officials. Do not change the times on your own."
+        }
+      ]
+    },
+    {
+      "id": "feeding-with-dignity",
+      "number": 7,
+      "title": "Feeding with dignity",
+      "summary": "Supervised feeding, and the 24-hour ghost plate.",
+      "minutes": 4,
+      "cards": [
+        {
+          "title": "Learners eat under supervision",
+          "flag": "Auditor-General finding",
+          "paragraphs": [
+            "Feed learners in the classroom or in a dining area, with an adult supervising. This teaches manners and keeps feeding orderly.",
+            "Do not send learners to eat with no one watching."
+          ]
+        },
+        {
+          "title": "Two ways to organise it",
+          "paragraphs": [
+            "Pick an arrangement the school can keep every day."
+          ],
+          "bullets": [
+            "A feeding period, for example 15 minutes before break",
+            "Designated feeding classes, for example some rooms for Grades 8 to 10 and other rooms for Grades 11 and 12"
+          ]
+        },
+        {
+          "title": "The ghost plate",
+          "paragraphs": [
+            "Every day, keep a small sample of each food item, including maize meal. Put each sample in its own covered container in the fridge.",
+            "Keep the samples for 24 hours, then throw them away. They are there in case the food needs to be tested."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Learners are fed in class or in a dining area, under supervision.",
+        "Use a short feeding period or designated feeding classes so the meal stays orderly.",
+        "Keep a ghost plate of every item, including maize meal, for 24 hours, then discard it."
+      ],
+      "quiz": [
+        {
+          "id": "where",
+          "prompt": "Where should learners be fed?",
+          "options": [
+            "Anywhere on the playground, with no adult nearby",
+            "In class or a dining area, under supervision",
+            "Only inside the kitchen",
+            "At home"
+          ],
+          "answer": 1,
+          "feedback": "Feed learners in the classroom or a dining area, under supervision. This is an Auditor-General finding."
+        },
+        {
+          "id": "why",
+          "prompt": "Why does supervised feeding matter?",
+          "options": [
+            "It teaches manners and keeps feeding orderly",
+            "It is only for photographs",
+            "It replaces the menu",
+            "It is optional at secondary schools"
+          ],
+          "answer": 0,
+          "feedback": "Supervision teaches manners and keeps the meal orderly."
+        },
+        {
+          "id": "how-long",
+          "prompt": "How long is a ghost plate kept?",
+          "options": [
+            "1 hour",
+            "24 hours, then it is thrown away",
+            "Until the end of the term",
+            "It is eaten by the food handler the same day"
+          ],
+          "answer": 1,
+          "feedback": "Keep the sample in a covered container in the fridge for 24 hours, then discard it."
+        },
+        {
+          "id": "what-sample",
+          "prompt": "What must the ghost plate include?",
+          "options": [
+            "Only the fruit",
+            "A small sample of each food item, including maize meal",
+            "Only leftovers from yesterday",
+            "Empty containers"
+          ],
+          "answer": 1,
+          "feedback": "Keep a small sample of each food item, including maize meal, in separate covered containers."
+        },
+        {
+          "id": "arrangement",
+          "prompt": "Which feeding arrangement fits this training?",
+          "options": [
+            "A 15-minute feeding period before break",
+            "Learners eating while they walk between classes, with no adult",
+            "Feeding after school with no plan",
+            "Skipping the main meal"
+          ],
+          "answer": 0,
+          "feedback": "A feeding period, such as 15 minutes before break, or designated feeding classes, keeps the meal supervised and orderly."
+        }
+      ]
+    },
+    {
+      "id": "food-safety",
+      "number": 8,
+      "title": "Food safety and hygiene",
+      "summary": "Hands, clothing, cleaning, and how learners prepare to eat.",
+      "minutes": 5,
+      "cards": [
+        {
+          "title": "The person cooking",
+          "paragraphs": [
+            "Wash hands often. Keep nails short and clean. Do not wear nail polish or jewellery.",
+            "Do not sneeze over food. Do not smoke in the kitchen or the storeroom. Wash hands after smoking.",
+            "If you have a cut, treat it with antiseptic and cover it with a waterproof plaster."
+          ]
+        },
+        {
+          "title": "The food",
+          "paragraphs": [
+            "Cover food at all times. Cook it thoroughly. Use it before the expiry date.",
+            "Keep raw food separate from cooked food. Do not touch ready-to-eat food with bare hands."
+          ]
+        },
+        {
+          "title": "The kitchen and the learners",
+          "paragraphs": [
+            "The kitchen needs water, soap, and clean cloths. Clean with detergent, such as Sunlight or Jik, and hot water. Clean as you go, and complete the disinfection register.",
+            "VFHs wear a clean apron and a hairnet, bandanna, or beanie.",
+            "Learners wash their hands under running water before every meal."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Short clean nails, no nail polish, no jewellery. Wash hands often.",
+        "No smoking in the kitchen or storeroom. Do not sneeze over food.",
+        "Cover food, cook it thoroughly, keep raw food away from cooked food, and use it before it expires.",
+        "Clean as you go and fill in the disinfection register. Learners wash under running water before every meal."
+      ],
+      "quiz": [
+        {
+          "id": "nails",
+          "prompt": "What is the rule for nails and jewellery?",
+          "options": [
+            "Long nails and rings are allowed",
+            "Short clean nails, no nail polish, and no jewellery",
+            "Only nail polish is a problem",
+            "Jewellery is required"
+          ],
+          "answer": 1,
+          "feedback": "Nails are short and clean. Nail polish and jewellery are not allowed while handling food."
+        },
+        {
+          "id": "smoking",
+          "prompt": "Where is smoking not allowed?",
+          "options": [
+            "In the kitchen and the storeroom",
+            "Only in the office",
+            "Smoking is allowed if a window is open",
+            "Only the office kitchen is restricted"
+          ],
+          "answer": 0,
+          "feedback": "Do not smoke in the kitchen or the storeroom. Wash your hands after smoking."
+        },
+        {
+          "id": "learners-hands",
+          "prompt": "How should learners wash their hands before a meal?",
+          "options": [
+            "With one shared cloth",
+            "Under running water",
+            "They do not need to wash",
+            "Only on Mondays"
+          ],
+          "answer": 1,
+          "feedback": "Learners wash their hands under running water before every meal."
+        },
+        {
+          "id": "cut",
+          "prompt": "What must a food handler with a cut do?",
+          "options": [
+            "Keep cooking with the cut uncovered",
+            "Treat it with antiseptic and cover it with a waterproof plaster",
+            "Cover it with a ring",
+            "Wipe it with the dish cloth"
+          ],
+          "answer": 1,
+          "feedback": "Treat the cut with antiseptic and cover it with a waterproof plaster."
+        },
+        {
+          "id": "clean",
+          "prompt": "Which cleaning practice is required?",
+          "options": [
+            "Clean only on Fridays",
+            "Clean as you go with detergent and hot water, and complete the disinfection register",
+            "Wipe with a dry cloth only",
+            "Store the detergent on top of the rice"
+          ],
+          "answer": 1,
+          "feedback": "Clean as you go, using detergent such as Sunlight or Jik and hot water, and complete the disinfection register."
+        }
+      ]
+    },
+    {
+      "id": "deliveries-and-storage",
+      "number": 9,
+      "title": "Deliveries and storage",
+      "summary": "What to check before you sign, and how to store the food.",
+      "minutes": 5,
+      "cards": [
+        {
+          "title": "Before you sign",
+          "paragraphs": [
+            "Check the stock against the delivery note. If anything does not match, do not sign.",
+            "Check expiry dates, packaging, and damage to the products.",
+            "Look at the vehicle. The loading area must be clean and covered. The truck must carry NSNP stock only. Detergents and chemicals do not travel with the food."
+          ]
+        },
+        {
+          "title": "In the storeroom",
+          "flag": "First in, first out is high priority",
+          "paragraphs": [
+            "Keep bags closed. Do not put food on the floor. Food must be at least 20 cm off the floor.",
+            "Never store chemicals or detergents with food.",
+            "Use first in, first out. Label old stock and new stock so the older food is used first. Keep the storeroom ventilated."
+          ]
+        }
+      ],
+      "keyRules": [
+        "If the delivery does not match the note, do not sign.",
+        "Check expiry dates, damage, and the vehicle. The truck carries NSNP food only.",
+        "Bags stay closed. Food is at least 20 cm off the floor. Chemicals stay out of the food store.",
+        "Label old and new stock and use the older stock first."
+      ],
+      "quiz": [
+        {
+          "id": "discrepancy",
+          "prompt": "The delivery does not match the delivery note. What do you do?",
+          "options": [
+            "Sign and sort it out later",
+            "Do not sign",
+            "Sign only the last page",
+            "Ask a learner to sign"
+          ],
+          "answer": 1,
+          "feedback": "Do not sign when there is a discrepancy. Check the stock against the delivery note first."
+        },
+        {
+          "id": "truck",
+          "prompt": "What may the NSNP delivery truck carry with the food?",
+          "options": [
+            "Detergents and chemicals",
+            "NSNP stock only",
+            "Fuel cans",
+            "Any school supplies"
+          ],
+          "answer": 1,
+          "feedback": "The truck carries NSNP stock only. Detergents and chemicals must not be loaded with the food."
+        },
+        {
+          "id": "off-floor",
+          "prompt": "How must food be stored off the floor?",
+          "options": [
+            "It may sit on the floor if the bags are closed",
+            "At least 20 cm off the floor",
+            "2 cm is enough",
+            "Only the tins must be raised"
+          ],
+          "answer": 1,
+          "feedback": "No food on the floor. Keep it at least 20 cm off the floor, and keep bags closed."
+        },
+        {
+          "id": "fifo",
+          "prompt": "What does first in, first out mean here?",
+          "options": [
+            "Use the newer stock first",
+            "Use the older stock first, and label old and new stock",
+            "Freeze everything on arrival",
+            "Order extra every day"
+          ],
+          "answer": 1,
+          "feedback": "Label old and new stock and use the older stock first. This is a high priority."
+        },
+        {
+          "id": "chemicals",
+          "prompt": "Where may chemicals and detergents be stored?",
+          "options": [
+            "On top of the rice bags",
+            "Never with the food",
+            "Inside the maize bin",
+            "In the same crate as the milk"
+          ],
+          "answer": 1,
+          "feedback": "Chemicals and detergents are never stored with food."
+        }
+      ]
+    },
+    {
+      "id": "safety",
+      "number": 10,
+      "title": "Safety in the preparation area",
+      "summary": "PPE, first aid, the extinguisher, and the gas stove order.",
+      "minutes": 5,
+      "cards": [
+        {
+          "title": "PPE and equipment",
+          "flag": "Minute 0001/2023",
+          "paragraphs": [
+            "Volunteer food handlers wear safety shoes, a head cover, and a uniform.",
+            "Every preparation area has a stocked first-aid kit. Every preparation area has a fire extinguisher that is checked and serviced regularly."
+          ]
+        },
+        {
+          "title": "Fire, or the smell of gas",
+          "paragraphs": [
+            "If there is a fire: close the valve, use the extinguisher, do not run, and call the fire brigade.",
+            "If you smell gas: do not switch on a light and do not light a match. Open the windows. Close the valve and the bottle."
+          ]
+        },
+        {
+          "title": "Lighting the stove",
+          "paragraphs": [
+            "Use the same order every time. A different order can cause a flare."
+          ],
+          "steps": [
+            "ON: 1. Open the cylinder. 2. Light the match. 3. Open the burner.",
+            "OFF: 1. Close the burner. 2. Close the cylinder."
+          ]
+        }
+      ],
+      "keyRules": [
+        "PPE is safety shoes, a head cover, and a uniform (Minute 0001/2023).",
+        "Every preparation area has a stocked first-aid kit and a fire extinguisher that is checked and serviced.",
+        "Gas smell: no lights, no matches, open the windows, close the valve and the bottle.",
+        "ON: cylinder, then match, then burner. OFF: burner, then cylinder."
+      ],
+      "quiz": [
+        {
+          "id": "ppe",
+          "prompt": "Which PPE is required?",
+          "options": [
+            "Safety shoes, a head cover, and a uniform",
+            "Only an apron on Fridays",
+            "Sandals and a cap",
+            "PPE is optional"
+          ],
+          "answer": 0,
+          "feedback": "Minute 0001/2023 requires safety shoes, a head cover, and a uniform."
+        },
+        {
+          "id": "on-order",
+          "prompt": "What is the correct order to turn the stove ON?",
+          "options": [
+            "Open the burner, light the match, open the cylinder",
+            "Open the cylinder, light the match, open the burner",
+            "Light the match, open the burner, open the cylinder",
+            "Open everything at the same time"
+          ],
+          "answer": 1,
+          "feedback": "ON order: 1 open the cylinder, 2 light the match, 3 open the burner."
+        },
+        {
+          "id": "off-order",
+          "prompt": "What is the correct order to turn the stove OFF?",
+          "options": [
+            "Close the cylinder, then the burner",
+            "Close the burner, then the cylinder",
+            "Leave the burner open overnight",
+            "Close the cylinder only at the end of the term"
+          ],
+          "answer": 1,
+          "feedback": "OFF order: 1 close the burner, 2 close the cylinder."
+        },
+        {
+          "id": "smell-gas",
+          "prompt": "You smell gas. What do you do?",
+          "options": [
+            "Switch on the light so you can see the leak",
+            "Light a match to find the leak",
+            "Do not switch on lights or light a match. Open the windows. Close the valve and the bottle.",
+            "Run through the kitchen"
+          ],
+          "answer": 2,
+          "feedback": "A light switch or a match can ignite the gas. Open windows and close the valve and the bottle."
+        },
+        {
+          "id": "equipment",
+          "prompt": "What safety equipment must every preparation area have?",
+          "options": [
+            "A stocked first-aid kit and a fire extinguisher that is checked and serviced",
+            "Only a bucket of sand at the school gate",
+            "A first-aid kit that is kept at someone’s home",
+            "No extra equipment is required"
+          ],
+          "answer": 0,
+          "feedback": "Every preparation area needs a stocked first-aid kit and a fire extinguisher that is checked and serviced regularly."
+        }
+      ]
+    },
+    {
+      "id": "daily-statistics",
+      "number": 11,
+      "title": "Daily feeding statistics",
+      "summary": "Submit a true count of learners fed, before 13:30.",
+      "minutes": 3,
+      "cards": [
+        {
+          "title": "Before 13:30",
+          "paragraphs": [
+            "Submit the daily feeding statistics every feeding day, before 13:30.",
+            "The number must be a true reflection of the learners who were fed."
+          ]
+        },
+        {
+          "title": "Do not inflate the numbers",
+          "paragraphs": [
+            "Do not add learners who did not eat. Inflated numbers cause stockpiling.",
+            "When the figures are reconciled, the school’s learner numbers may be reduced.",
+            "The daily statistic and the attendance register should tell the same story."
+          ]
+        }
+      ],
+      "keyRules": [
+        "Submit daily feeding statistics before 13:30.",
+        "Count only learners who were actually fed.",
+        "Do not inflate. Stockpiling can follow, and numbers may be cut on reconciliation.",
+        "The statistic and the attendance register must agree."
+      ],
+      "quiz": [
+        {
+          "id": "by-when",
+          "prompt": "By what time are daily feeding statistics due?",
+          "options": [
+            "08:00",
+            "Before 13:30",
+            "Before the 7th of the next month",
+            "At the end of the term"
+          ],
+          "answer": 1,
+          "feedback": "Submit the daily statistics before 13:30. The 7th is the deadline for the three monthly forms."
+        },
+        {
+          "id": "true",
+          "prompt": "What must the statistic show?",
+          "options": [
+            "Every learner enrolled, even if they were absent",
+            "A true reflection of learners who were fed",
+            "The highest number the school has ever fed",
+            "An estimate, rounded up"
+          ],
+          "answer": 1,
+          "feedback": "Report the learners who were actually fed. Do not use enrolment or a rounded-up guess."
+        },
+        {
+          "id": "inflate",
+          "prompt": "What can happen if the numbers are inflated?",
+          "options": [
+            "Nothing",
+            "Stockpiling, and learner numbers may be reduced when the figures are reconciled",
+            "The school receives a bonus",
+            "The menu changes to fruit only"
+          ],
+          "answer": 1,
+          "feedback": "Inflated numbers cause stockpiling. On reconciliation, the learner numbers may be reduced."
+        },
+        {
+          "id": "absent",
+          "prompt": "May the school add learners who did not eat?",
+          "options": [
+            "Yes, to keep the allocation high",
+            "No. Do not inflate the count",
+            "Yes, if a neighbour school agrees",
+            "Yes, on Fridays only"
+          ],
+          "answer": 1,
+          "feedback": "Do not inflate. Count the learners who were fed."
+        },
+        {
+          "id": "same-story",
+          "prompt": "The daily statistics and the attendance register should:",
+          "options": [
+            "Show different numbers on purpose",
+            "Both reflect the learners who were actually fed",
+            "Be completed only at month end",
+            "Be filled in before the term starts"
+          ],
+          "answer": 1,
+          "feedback": "Both records must be a true count of learners fed, completed on the day."
+        }
+      ]
+    }
+  ],
+  "checklists": [
+    {
+      "id": "preparation-area",
+      "title": "Preparation area documents",
+      "summary": "Walk the kitchen. Tick what is actually there today.",
+      "items": [
+        { "id": "calendar", "label": "Feeding calendar is in the preparation area" },
+        { "id": "menu", "label": "Menu is in the preparation area" },
+        { "id": "measurements", "label": "Measurements are in the preparation area" },
+        { "id": "duty-list", "label": "VFH duty list (annexure) is in the preparation area" },
+        { "id": "attendance", "label": "Daily attendance register is in the preparation area" },
+        { "id": "stock-form", "label": "Stock form is in the preparation area" },
+        {
+          "id": "inventory",
+          "label": "Kitchen equipment inventory is on file",
+          "hint": "School letterhead, dated, principal’s signature — or the NSNP template."
+        },
+        { "id": "disinfectant", "label": "Disinfectant register is in use" },
+        { "id": "coc", "label": "Certificate of Compliance (gas) is on file" },
+        { "id": "coa", "label": "Certificate of Acceptability (kitchen) is on file" },
+        { "id": "poster-hygiene", "label": "Hygiene poster is on the wall" },
+        { "id": "poster-gas", "label": "Gas safety poster is on the wall" },
+        { "id": "poster-food", "label": "Food safety poster is on the wall" }
+      ]
+    },
+    {
+      "id": "delivery-checks",
+      "title": "Delivery and storage checks",
+      "summary": "Use this when stock arrives, and again when you lock the storeroom.",
+      "items": [
+        { "id": "matches", "label": "Stock matches the delivery note" },
+        {
+          "id": "no-sign",
+          "label": "I did not sign while there was a discrepancy",
+          "hint": "If anything does not match, leave the note unsigned."
+        },
+        { "id": "expiry", "label": "Expiry dates checked" },
+        { "id": "damage", "label": "Packaging and products checked for damage" },
+        { "id": "vehicle", "label": "Loading area is clean and covered" },
+        {
+          "id": "truck-only",
+          "label": "Truck is carrying NSNP stock only",
+          "hint": "No detergents or chemicals with the food."
+        },
+        { "id": "bags-closed", "label": "Bags in the storeroom are closed" },
+        { "id": "off-floor", "label": "Food is at least 20 cm off the floor" },
+        { "id": "chemicals", "label": "Chemicals and detergents are stored away from food" },
+        {
+          "id": "fifo",
+          "label": "Old and new stock are labelled",
+          "hint": "Use older stock first. This is high priority."
+        },
+        { "id": "ventilated", "label": "Storeroom is ventilated" }
+      ]
+    },
+    {
+      "id": "monthly-forms",
+      "title": "Monthly forms",
+      "summary": "Daily ticks during the month, then the pack that goes to the district before the 7th.",
+      "items": [
+        {
+          "id": "attendance-today",
+          "label": "Attendance register completed today",
+          "hint": "Date, menu number, time of the main meal, and learners fed."
+        },
+        { "id": "stock-today", "label": "Stock form completed today" },
+        { "id": "opening", "label": "Opening stock is what was left last month" },
+        { "id": "deliveries", "label": "First and second deliveries are recorded" },
+        {
+          "id": "stock-left",
+          "label": "Stock-left column filled by the NSNP coordinator only",
+          "hint": "A food handler does not fill this column."
+        },
+        { "id": "bags-opened", "label": "Bags opened are recorded by date" },
+        { "id": "weekly", "label": "Weekly deliveries are written at the bottom" },
+        {
+          "id": "stamp",
+          "label": "Coordinator name, school stamp, and the person who takes stock out are on the form"
+        },
+        { "id": "proof-matches", "label": "Proof of payment matches the honorarium scale" },
+        { "id": "fh-signed", "label": "Food handlers have signed the proof of payment" },
+        { "id": "uif", "label": "UIF registration and payment proof are in the file" },
+        {
+          "id": "sent",
+          "label": "All three forms sent to the district before the 7th",
+          "hint": "Attendance register, stock monitoring, and proof of payment."
+        }
+      ]
+    }
+  ],
+  "deadlines": [
+    {
+      "id": "every-day",
+      "title": "Every feeding day",
+      "items": [
+        {
+          "id": "breakfast",
+          "when": "08:00",
+          "detail": "Breakfast is finished by 08:00."
+        },
+        {
+          "id": "framework",
+          "when": "10:00",
+          "detail": "The principal sets feeding times from the Conditional Grant Framework, or the 10:00 and/or before 12:30 rule."
+        },
+        {
+          "id": "main-meal",
+          "when": "12:30",
+          "detail": "The main meal is finished before 12:30."
+        },
+        {
+          "id": "statistics",
+          "when": "13:30",
+          "detail": "Submit daily feeding statistics before 13:30. Count only learners who were fed. Do not inflate the number."
+        },
+        {
+          "id": "registers",
+          "when": "Same day",
+          "detail": "Complete the attendance register and the stock form on the day. Do not fill them in only at month end, and do not fill them in advance."
+        },
+        {
+          "id": "hands",
+          "when": "Before meals",
+          "detail": "Learners wash their hands under running water before every meal."
+        },
+        {
+          "id": "ghost",
+          "when": "24 hours",
+          "detail": "Keep a ghost plate of each food item, including maize meal, in the fridge for 24 hours. Then discard it."
+        }
+      ]
+    },
+    {
+      "id": "every-month",
+      "title": "Every month",
+      "items": [
+        {
+          "id": "forms",
+          "when": "The 7th",
+          "detail": "Send three forms to the district before the 7th of the following month: the daily feeding and volunteer attendance register, stock monitoring, and volunteer proof of payment."
+        },
+        {
+          "id": "proof",
+          "when": "Month end",
+          "detail": "Proof of payment matches the honorarium scale. Food handlers sign it."
+        },
+        {
+          "id": "email-stock",
+          "when": "Email",
+          "detail": "Email the stock form with the coordinator’s name and the school stamp. Name the person who takes stock out."
+        },
+        {
+          "id": "uif",
+          "when": "R45.12",
+          "detail": "UIF is R45.12 from 1 April 2026 to 31 March 2027. Keep proof of registration and of each payment in the NSNP file."
+        },
+        {
+          "id": "honorarium",
+          "when": "R2,256.00",
+          "detail": "From April 2026 the honorarium is R2,256.00 per volunteer per month. The amount paid to the school follows the scale."
+        }
+      ]
+    },
+    {
+      "id": "when-it-changes",
+      "title": "When people or times change",
+      "items": [
+        {
+          "id": "vfh-pack",
+          "when": "Once a year",
+          "detail": "Send the food handler agreement, registration forms, a certified clear ID copy, and the volunteer addendums to the district once a year, and when a new VFH starts."
+        },
+        {
+          "id": "rotate",
+          "when": "Contract end",
+          "detail": "Rotate volunteer food handlers when the contract ends. The coordinator discusses duties with each new VFH."
+        },
+        {
+          "id": "deviation",
+          "when": "Ask first",
+          "detail": "If the school cannot keep the feeding times, request the change from the district officials before you change them."
+        }
+      ]
+    },
+    {
+      "id": "committee",
+      "title": "The committee file",
+      "items": [
+        {
+          "id": "minutes",
+          "when": "Each term",
+          "detail": "Keep NSNP committee minutes every term, plus the member list and acceptance letters, in the NSNP file."
+        },
+        {
+          "id": "agenda",
+          "when": "Each meeting",
+          "detail": "The SMT member keeps NSNP on school meeting agendas and reports problems to the principal and the SMT."
+        }
+      ]
+    }
+  ],
+  "honorarium": {
+    "monthlyPerVolunteer": 2256,
+    "monthlyLabel": "R2,256.00 per volunteer per month from April 2026",
+    "uifAmount": 45.12,
+    "uifLabel": "R45.12",
+    "uifPeriod": "1 April 2026 to 31 March 2027",
+    "small": {
+      "label": "Schools with 250 learners or fewer enrolled",
+      "bands": [
+        { "min": 1, "max": 120, "volunteers": 1, "amount": 2256 },
+        { "min": 121, "max": 250, "volunteers": 2, "amount": 4602.24 }
+      ]
+    },
+    "large": {
+      "label": "Schools with more than 250 learners enrolled",
+      "bands": [
+        { "min": 1, "max": 210, "volunteers": 1, "amount": 2301.12 },
+        { "min": 211, "max": 410, "volunteers": 2, "amount": 4602.24 },
+        { "min": 411, "max": 610, "volunteers": 3, "amount": 6903.36 },
+        { "min": 611, "max": 810, "volunteers": 4, "amount": 9204.48 },
+        { "min": 811, "max": 1010, "volunteers": 5, "amount": 11505.6 },
+        { "min": 1011, "max": 1210, "volunteers": 6, "amount": 13806.72 },
+        { "min": 1211, "max": 1450, "volunteers": 7, "amount": 16107.84 },
+        { "min": 1451, "max": null, "volunteers": 8, "amount": 18408.96 }
+      ]
+    }
+  },
+  "mealEstimate": {
+    "baseLearners": 500,
+    "exampleLabel": "Roadshow example: 500 secondary learners",
+    "breakfast": [
+      {
+        "id": "porridge",
+        "name": "Breakfast porridge",
+        "quantity": 10,
+        "unit": "kg",
+        "when": "Breakfast, every feeding day"
+      }
+    ],
+    "main": [
+      { "id": "rice", "name": "Rice", "quantity": 25, "unit": "kg", "when": "Main meal" },
+      { "id": "samp", "name": "Samp", "quantity": 30, "unit": "kg", "when": "Main meal" },
+      { "id": "soya", "name": "Soya mince", "quantity": 17.5, "unit": "kg", "when": "Main meal" },
+      { "id": "lentils", "name": "Lentils", "quantity": 5, "unit": "kg", "when": "Main meal" },
+      { "id": "beans", "name": "Sugar beans", "quantity": 20, "unit": "kg", "when": "Main meal" },
+      { "id": "pilchards", "name": "Pilchards", "quantity": 75, "unit": "tins", "when": "Main meal" },
+      { "id": "livers", "name": "Chicken livers", "quantity": 70, "unit": "tins", "when": "Main meal" },
+      {
+        "id": "milk",
+        "name": "UHT milk (200 ml)",
+        "quantity": 500,
+        "unit": "sachets",
+        "when": "Wednesday"
+      },
+      {
+        "id": "veg",
+        "name": "Cabbage, butternut, or carrots",
+        "quantity": 40,
+        "unit": "kg",
+        "when": "Main meal"
+      },
+      { "id": "fruit", "name": "Fruit", "quantity": 500, "unit": "fruit", "when": "Tuesday" }
+    ]
+  }
+}
