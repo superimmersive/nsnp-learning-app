@@ -4,6 +4,8 @@ export type LessonCard = {
   bullets?: string[]
   steps?: string[]
   flag?: string
+  image?: string
+  imageAlt?: string
 }
 
 export type QuizQuestion = {
@@ -22,6 +24,8 @@ export type Module = {
   title: string
   summary: string
   minutes: number
+  image: string
+  imageAlt: string
   tool?: ModuleTool
   cards: LessonCard[]
   keyRules: string[]

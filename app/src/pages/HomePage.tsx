@@ -95,8 +95,15 @@ export function HomePage() {
                   to={`/module/${module.id}`}
                   className="flex items-start gap-3 rounded-xl border border-line bg-white px-3 py-3"
                 >
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-navy text-sm font-semibold text-white">
-                    {module.number}
+                  <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-navy">
+                    <img
+                      src={`${import.meta.env.BASE_URL}illustrations/${module.image}`}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                    <span className="absolute bottom-0.5 left-0.5 rounded bg-navy/85 px-1 text-[11px] font-semibold leading-4 text-white">
+                      {module.number}
+                    </span>
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-base font-semibold leading-snug text-navy">{module.title}</span>

@@ -155,6 +155,8 @@
       "number": 1,
       "title": "What is the NSNP?",
       "summary": "Why the programme exists, and who to call in the district.",
+      "image": "what-is-nsnp.jpg",
+      "imageAlt": "Learners sit in class with plates of maize, beans, and vegetables, ready to concentrate.",
       "minutes": 4,
       "cards": [
         {
@@ -166,6 +168,8 @@
         },
         {
           "title": "Healthy habits and school gardens",
+          "image": "school-garden.jpg",
+          "imageAlt": "A teacher and two learners tend cabbage and carrot beds in a school garden.",
           "paragraphs": [
             "The programme also teaches a healthy lifestyle. Schools are encouraged to grow vegetables and to use the garden as part of learning."
           ]
@@ -256,6 +260,8 @@
       "number": 2,
       "title": "Preparation area documents",
       "summary": "What must be in the kitchen file and on the wall.",
+      "image": "preparation-area.jpg",
+      "imageAlt": "A preparation-area counter with a kitchen file, a blank calendar, and wall posters for handwashing, gas, and meals.",
       "minutes": 5,
       "cards": [
         {
@@ -364,6 +370,8 @@
       "number": 3,
       "title": "Volunteer food handlers",
       "summary": "Documents, rotation, the April 2026 honorarium, and UIF.",
+      "image": "volunteer-food-handlers.jpg",
+      "imageAlt": "Two volunteer food handlers in head covers, aprons, and closed shoes portion rice and vegetables onto plates.",
       "minutes": 8,
       "tool": "honorarium",
       "cards": [
@@ -469,6 +477,8 @@
       "number": 4,
       "title": "The NSNP committee",
       "summary": "Who sits on it, and what each person must do.",
+      "image": "nsnp-committee.jpg",
+      "imageAlt": "A principal, a teacher, a learner, a parent, and a food handler sit together reviewing a folder.",
       "minutes": 8,
       "cards": [
         {
@@ -636,6 +646,8 @@
       "number": 5,
       "title": "Monthly forms",
       "summary": "Three forms before the 7th, completed daily — not at month end.",
+      "image": "monthly-forms.jpg",
+      "imageAlt": "An adult fills in a form at a desk, with a calendar marking one day early in the month.",
       "minutes": 7,
       "cards": [
         {
@@ -775,6 +787,8 @@
       "number": 6,
       "title": "Menu, measurements, and times",
       "summary": "The three food groups, quantities, and when meals must be finished.",
+      "image": "food-groups.jpg",
+      "imageAlt": "A plate with three portions: maize porridge, sugar beans, and cabbage with carrots.",
       "minutes": 6,
       "tool": "meal-estimate",
       "cards": [
@@ -876,6 +890,8 @@
       "number": 7,
       "title": "Feeding with dignity",
       "summary": "Supervised feeding, and the 24-hour ghost plate.",
+      "image": "feeding-with-dignity.jpg",
+      "imageAlt": "Learners eat seated in rows while an adult supervises.",
       "minutes": 4,
       "cards": [
         {
@@ -898,6 +914,8 @@
         },
         {
           "title": "The ghost plate",
+          "image": "ghost-plate.jpg",
+          "imageAlt": "Four lidded sample tubs in a fridge: maize porridge, rice, beans, and cabbage.",
           "paragraphs": [
             "Every day, keep a small sample of each food item, including maize meal. Put each sample in its own covered container in the fridge.",
             "Keep the samples for 24 hours, then throw them away. They are there in case the food needs to be tested."
@@ -977,6 +995,8 @@
       "number": 8,
       "title": "Food safety and hygiene",
       "summary": "Hands, clothing, cleaning, and how learners prepare to eat.",
+      "image": "food-safety.jpg",
+      "imageAlt": "A food handler and a learner wash their hands with soap at a kitchen sink.",
       "minutes": 5,
       "cards": [
         {
@@ -1077,6 +1097,8 @@
       "number": 9,
       "title": "Deliveries and storage",
       "summary": "What to check before you sign, and how to store the food.",
+      "image": "deliveries-and-storage.jpg",
+      "imageAlt": "An adult checks bags and tins on a pallet against a delivery note before a covered truck.",
       "minutes": 5,
       "cards": [
         {
@@ -1089,6 +1111,8 @@
         },
         {
           "title": "In the storeroom",
+          "image": "fifo-storage.jpg",
+          "imageAlt": "Older tins and closed bags sit at the front of a raised shelf. Newer stock is behind them. Detergent is in a separate cupboard.",
           "flag": "First in, first out is high priority",
           "paragraphs": [
             "Keep bags closed. Do not put food on the floor. Food must be at least 20 cm off the floor.",
@@ -1171,6 +1195,8 @@
       "number": 10,
       "title": "Safety in the preparation area",
       "summary": "PPE, first aid, the extinguisher, and the gas stove order.",
+      "image": "safety.jpg",
+      "imageAlt": "A food handler in a head cover, uniform, and closed shoes stands by a fire extinguisher, a first-aid box, and an upright gas cylinder.",
       "minutes": 5,
       "cards": [
         {
@@ -1190,6 +1216,8 @@
         },
         {
           "title": "Lighting the stove",
+          "image": "gas-stove-on.jpg",
+          "imageAlt": "Three steps to light the stove: open the cylinder, light the match, then open the burner.",
           "paragraphs": [
             "Use the same order every time. A different order can cause a flare."
           ],
@@ -1273,6 +1301,8 @@
       "number": 11,
       "title": "Daily feeding statistics",
       "summary": "Submit a true count of learners fed, before 13:30.",
+      "image": "daily-statistics.jpg",
+      "imageAlt": "An adult writes a count while looking at the learners who are actually eating in the next room.",
       "minutes": 3,
       "cards": [
         {

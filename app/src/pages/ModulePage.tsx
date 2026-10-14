@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router'
 import { HonorariumScale, HonorariumTool } from '@/components/HonorariumTool'
+import { LessonFigure } from '@/components/LessonFigure'
 import { MealCalculator } from '@/components/MealCalculator'
 import { Quiz } from '@/components/Quiz'
 import { Badge } from '@/components/ui/badge'
@@ -36,12 +37,16 @@ export function ModulePage() {
       </p>
       <h1 className="mt-1 text-2xl font-semibold leading-tight text-navy">{module.title}</h1>
       <p className="mt-2 text-base leading-relaxed text-ink">{module.summary}</p>
+      <LessonFigure className="mt-4" src={module.image} alt={module.imageAlt} />
 
       <div className="mt-4 space-y-3">
         {module.cards.map((card) => (
           <section key={card.title} className="rounded-xl border border-line bg-white px-4 py-4">
             {card.flag && <Badge className="mb-2 bg-gold-soft text-gold">{card.flag}</Badge>}
             <h2 className="text-base font-semibold text-navy">{card.title}</h2>
+            {card.image && card.imageAlt && (
+              <LessonFigure className="mt-3" src={card.image} alt={card.imageAlt} />
+            )}
             {card.paragraphs.map((paragraph) => (
               <p key={paragraph} className="mt-2 text-sm leading-relaxed text-ink">
                 {paragraph}

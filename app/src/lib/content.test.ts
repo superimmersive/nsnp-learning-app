@@ -1,6 +1,11 @@
+import { existsSync } from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { content } from './content.ts'
 import { requiredCorrect } from './calculator.ts'
+
+const illustrationsDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/illustrations')
 
 describe('roadshow content', () => {
   it('has the 11 roadshow modules in order', () => {
@@ -47,6 +52,22 @@ describe('roadshow content', () => {
     expect(text).toContain('7th')
     expect(text).toContain('R2,256.00')
     expect(text).toContain('R45.12')
+  })
+
+  it('illustrates every module with a file that exists', () => {
+    const names = new Set<string>()
+    for (const module of content.modules) {
+      expect(module.imageAlt.trim().length).toBeGreaterThan(12)
+      names.add(module.image)
+      for (const card of module.cards) {
+        if (!card.image) continue
+        expect(card.imageAlt?.trim().length ?? 0).toBeGreaterThan(12)
+        names.add(card.image)
+      }
+    }
+    for (const name of names) {
+      expect(existsSync(path.join(illustrationsDir, name)), name).toBe(true)
+    }
   })
 
   it('uses a pass mark of 4 out of 5', () => {
