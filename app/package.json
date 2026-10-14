@@ -6,11 +6,23 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:native": "node ./scripts/build-native.mjs",
+    "cap:sync": "npm run build:native && cap sync",
+    "assets:native": "node ./scripts/generate-native-assets.mjs",
+    "android:apk": "npm run cap:sync && node ./scripts/ensure-android-sdk.mjs && node ./scripts/android-gradle.mjs assembleDebug",
+    "android:aab": "npm run cap:sync && node ./scripts/ensure-android-sdk.mjs && node ./scripts/android-gradle.mjs bundleRelease",
+    "android:open": "cap open android",
+    "ios:open": "cap open ios",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@radix-ui/react-checkbox": "^1.4.1",
     "@radix-ui/react-label": "^2.1.17",
     "@radix-ui/react-progress": "^1.2.1",
@@ -24,6 +36,8 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",

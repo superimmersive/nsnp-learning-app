@@ -5,6 +5,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
+import { siteBase } from './src/lib/site-base.ts'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
@@ -19,13 +20,6 @@ function walkFiles(dir: string): string[] {
     }
   }
   return found
-}
-
-function siteBase(): string {
-  const raw = process.env.BASE_PATH?.trim()
-  if (!raw || raw === '/') return '/'
-  const withLeading = raw.startsWith('/') ? raw : `/${raw}`
-  return withLeading.endsWith('/') ? withLeading : `${withLeading}/`
 }
 
 function precacheServiceWorker(): Plugin {
@@ -94,7 +88,7 @@ self.addEventListener('fetch', (event) => {
 }
 
 export default defineConfig({
-  base: siteBase(),
+  base: siteBase(process.env.BASE_PATH),
   plugins: [react(), tailwindcss(), precacheServiceWorker()],
   resolve: {
     alias: {
