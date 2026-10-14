@@ -12,6 +12,24 @@ dist
 dist-ssr
 *.local
 
+# Capacitor web copies and native build output. Run npm run cap:sync to recreate them.
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+android/app/src/main/assets/public/
+android/.idea/
+*.apk
+*.aab
+*.ap_
+*.keystore
+*.jks
+ios/App/Pods/
+ios/App/build/
+ios/DerivedData/
+ios/App/App/public/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

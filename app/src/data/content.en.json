@@ -16,6 +16,7 @@
   "ui": {
     "skipToContent": "Skip to content",
     "offline": "You are offline. Lessons already opened on this phone still work.",
+    "offlineNative": "You are offline. Every lesson in this app still works.",
     "installHint": "Add this site to your home screen. After one full visit, the lessons open again when the signal is weak.",
     "nav": {
       "landmark": "Main",

@@ -2,6 +2,7 @@ import { Award, Clock3, House, ListChecks } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { content } from '@/lib/content'
+import { isNativeApp } from '@/lib/native'
 import { passedCount } from '@/lib/progress'
 import { useProgress } from '@/context/ProgressContext'
 
@@ -45,7 +46,7 @@ export function AppShell() {
       >
         {content.ui.skipToContent}
       </a>
-      <header className="no-print sticky top-0 z-20 bg-navy text-white">
+      <header className="no-print sticky top-0 z-20 bg-navy pt-[env(safe-area-inset-top)] text-white">
         <div className="mx-auto flex max-w-xl items-center justify-between gap-3 px-4 py-3">
           <NavLink to="/" className="flex min-w-0 items-center gap-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white/10 text-sm font-bold tracking-wide">
@@ -63,7 +64,9 @@ export function AppShell() {
         </div>
       </header>
       {!online && (
-        <p className="bg-gold-soft px-4 py-2 text-center text-sm font-medium text-navy">{content.ui.offline}</p>
+        <p className="bg-gold-soft px-4 py-2 text-center text-sm font-medium text-navy">
+          {isNativeApp() ? content.ui.offlineNative : content.ui.offline}
+        </p>
       )}
       <main id="content" className="mx-auto w-full max-w-xl px-4 pb-28 pt-4">
         <Outlet />

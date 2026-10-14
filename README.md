@@ -23,4 +23,10 @@ short modules, quizzes, checklists and printable forms.
 ## Folders
 - `reference/` original PDF and slide previews (`slides/`)
 - `content/` extracted text and module scripts
-- `app/` web app source
+- `app/` web app source, also wrapped with Capacitor for Android and iOS
+
+## Apps
+
+The GitHub Pages site stays a static build under `/nsnp-learning-app/`. The same code installs as **NSNP Learning** (`za.co.superimmersive.nsnp`) on Android and iOS. Progress stays in `localStorage` on the device, and the installed app works offline.
+
+Build and signing steps, including the debug APK, the Play Console bundle, and TestFlight, are in [app/README.md](app/README.md).

@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { useProgress } from '@/context/ProgressContext'
 import { content } from '@/lib/content'
+import { isNativeApp } from '@/lib/native'
 import { passedCount } from '@/lib/progress'
 
 function statusFor(visited: boolean, passed: boolean) {
@@ -126,7 +127,7 @@ export function HomePage() {
         <p>
           {copy.presenters}: {content.meta.presenters.join(' and ')}. {content.meta.audience}.
         </p>
-        <p className="mt-2">{content.ui.installHint}</p>
+        {!isNativeApp() && <p className="mt-2">{content.ui.installHint}</p>}
       </footer>
     </div>
   )

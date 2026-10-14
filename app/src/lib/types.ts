@@ -92,6 +92,7 @@ export type Content = {
   ui: {
     skipToContent: string
     offline: string
+    offlineNative: string
     installHint: string
     nav: {
       landmark: string
