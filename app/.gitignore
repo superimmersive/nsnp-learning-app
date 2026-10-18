@@ -12,6 +12,22 @@ dist
 dist-ssr
 *.local
 
+# Signing material. Never commit these.
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.mobileprovision
+*.cer
+*.certSigningRequest
+*.p8
+keystore.properties
+google-services.json
+GoogleService-Info.plist
+play-store-credentials.json
+AuthKey_*.p8
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

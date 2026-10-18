@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NSNP Learning</string>
+    <string name="title_activity_main">NSNP Learning</string>
+    <string name="package_name">za.co.superimmersive.nsnp</string>
+    <string name="custom_url_scheme">za.co.superimmersive.nsnp</string>
+</resources>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>NSNP Learning</title>
+  <!-- Transparent mark. The generator places this on the navy app background. -->
+  <circle cx="512" cy="430" r="168" fill="none" stroke="#ffffff" stroke-width="36"/>
+  <circle cx="512" cy="430" r="58" fill="#e6c36a"/>
+  <rect x="362" y="656" width="300" height="18" rx="9" fill="#e6c36a"/>
+  <text
+    x="512"
+    y="820"
+    text-anchor="middle"
+    font-family="Inter, Liberation Sans, Arial, Helvetica, sans-serif"
+    font-size="132"
+    font-weight="700"
+    fill="#ffffff"
+    letter-spacing="10"
+  >NSNP</text>
+</svg>

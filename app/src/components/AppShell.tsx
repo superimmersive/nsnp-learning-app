@@ -1,5 +1,5 @@
 import { Award, Clock3, House, ListChecks } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { content } from '@/lib/content'
 import { passedCount } from '@/lib/progress'
@@ -41,11 +41,12 @@ export function AppShell() {
     <div className="min-h-dvh bg-paper text-ink">
       <a
         href="#content"
+        onClick={skipToContent}
         className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2"
       >
         {content.ui.skipToContent}
       </a>
-      <header className="no-print sticky top-0 z-20 bg-navy text-white">
+      <header className="no-print sticky top-0 z-20 bg-navy pt-[env(safe-area-inset-top)] text-white">
         <div className="mx-auto flex max-w-xl items-center justify-between gap-3 px-4 py-3">
           <NavLink to="/" className="flex min-w-0 items-center gap-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white/10 text-sm font-bold tracking-wide">
@@ -65,7 +66,7 @@ export function AppShell() {
       {!online && (
         <p className="bg-gold-soft px-4 py-2 text-center text-sm font-medium text-navy">{content.ui.offline}</p>
       )}
-      <main id="content" className="mx-auto w-full max-w-xl px-4 pb-28 pt-4">
+      <main id="content" tabIndex={-1} className="mx-auto w-full max-w-xl px-4 pb-28 pt-4 outline-none">
         <Outlet />
       </main>
       <nav
@@ -93,4 +94,12 @@ export function AppShell() {
       </nav>
     </div>
   )
+}
+
+function skipToContent(event: MouseEvent<HTMLAnchorElement>) {
+  // The native app stores its route in the URL hash. Following #content would
+  // replace that route, so move focus without touching the hash.
+  if (import.meta.env.MODE !== 'native') return
+  event.preventDefault()
+  document.getElementById('content')?.focus()
 }
