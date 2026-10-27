@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { loadTrialSnapshot, prototypeStorage, saveTrialSnapshot } from '@/prototype/storage'
 import { reduceOfficials, type OfficialsAction } from './actions'
-import { createExampleSnapshot } from './mockData'
 import type { OfficialsSnapshot, ViewerRole } from './types'
 
 type ActionInput = {
@@ -20,7 +20,8 @@ type OfficialsController = {
 const OfficialsContext = createContext<OfficialsController | null>(null)
 
 export function OfficialsProvider({ children }: { children: ReactNode }) {
-  const [snapshot, setSnapshot] = useState(createExampleSnapshot)
+  const storage = prototypeStorage()
+  const [snapshot, setSnapshot] = useState(() => loadTrialSnapshot(storage))
   const [viewingAs, setViewingAs] = useState<ViewerRole>('district_official')
 
   const api = useMemo<OfficialsController>(() => {
@@ -32,16 +33,18 @@ export function OfficialsProvider({ children }: { children: ReactNode }) {
       setViewingAs,
       dispatch: (action) => {
         const at = action.at ?? new Date().toISOString()
-        setSnapshot((current) =>
-          reduceOfficials(current, {
+        setSnapshot((current) => {
+          const next = reduceOfficials(current, {
             ...action,
             actorMembershipId,
             at,
-          } as OfficialsAction),
-        )
+          } as OfficialsAction)
+          saveTrialSnapshot(storage, next)
+          return next
+        })
       },
     }
-  }, [snapshot, viewingAs])
+  }, [snapshot, viewingAs, storage])
 
   return <OfficialsContext.Provider value={api}>{children}</OfficialsContext.Provider>
 }

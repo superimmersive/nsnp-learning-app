@@ -76,6 +76,14 @@ export type JoinCode = {
   issuedBy: string
 }
 
+/** Reusable code the coordinator reads to other staff. It is not tied to one cellphone. */
+export type StaffCode = {
+  id: string
+  schoolId: string
+  code: string
+  refreshedAt: string
+}
+
 export type ContentRelease = {
   id: string
   locale: 'en' | 'af' | 'xh'
@@ -171,6 +179,7 @@ export type OfficialsSnapshot = {
   memberships: Membership[]
   officialAssignments: OfficialAssignment[]
   joinCodes: JoinCode[]
+  staffCodes: StaffCode[]
   contentReleases: ContentRelease[]
   moduleProgress: ModuleProgress[]
   certificates: Certificate[]

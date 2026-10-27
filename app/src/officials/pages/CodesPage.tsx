@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { makeJoinCode } from '../actions'
 import { actorName, maskPhone, roleLabel } from '../metrics'
@@ -41,7 +42,11 @@ export function CodesPage() {
       <h1 className="text-2xl font-semibold text-navy">Join codes</h1>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed">
         A code lets one coordinator or principal join one school. It expires after 14 days. The phone only keeps the last
-        four digits in the audit log.
+        four digits in the audit log. The coordinator types it on{' '}
+        <Link to="/join/coordinator" className="font-semibold text-blue">
+          Join this school
+        </Link>
+        . A code issued here is saved in this browser for that screen.
       </p>
 
       <Section title="Issue a code">

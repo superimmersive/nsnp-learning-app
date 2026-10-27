@@ -5,6 +5,7 @@ import type {
   DailyFeedingStat,
   IssueReport,
   JoinCode,
+  StaffCode,
   Membership,
   ModuleProgress,
   MonthlyPack,
@@ -56,6 +57,22 @@ type SchoolSeed = {
   days?: Day[]
   october?: { attendance: boolean; stock: boolean; proof: boolean; at?: string }
   septemberLate?: boolean
+}
+
+/** Staff codes the coordinator can read out. A real app can refresh these. */
+export const EXAMPLE_STAFF_CODES: Record<string, string> = {
+  '90000001': 'HANDL2',
+  '90000002': 'HARB2K',
+  '90000003': 'GANN3K',
+  '90000004': 'KEUR4K',
+  '90000005': 'STON5K',
+  '90000006': 'BERG6K',
+  '90000007': 'MELK7K',
+  '90000008': 'PLAT8K',
+  '90000009': 'DRYH9K',
+  '90000010': 'LANG2K',
+  '90000011': 'SOUT3K',
+  '90000012': 'WITK4K',
 }
 
 const SCHOOLS: SchoolSeed[] = [
@@ -417,10 +434,18 @@ export function createExampleSnapshot(): OfficialsSnapshot {
 
   joinCodes.push(
     code('code-dryveld', 'school-90000009', 'DRY4K2', '+27820000091', null, null),
+    code('code-dryveld-old', 'school-90000009', 'OLD2K4', '+27820000099', null, null, '2026-10-01T15:00:00+02:00'),
     code('code-langbos', 'school-90000010', 'LANG7M3', '+27820000010', '2026-10-20T12:00:00+02:00', null),
     code('code-river', 'school-90000001', 'RIV2P8', '+27820000001', '2026-10-08T10:00:00+02:00', null),
     code('code-witklip-old', 'school-90000012', 'WIT9Q1', '+27820000012', null, '2026-10-12T08:00:00+02:00'),
   )
+
+  const staffCodes: StaffCode[] = schools.map((school) => ({
+    id: `staff-${school.id}`,
+    schoolId: school.id,
+    code: EXAMPLE_STAFF_CODES[school.schoolNumber] ?? 'STAFF2',
+    refreshedAt: '2026-10-01T08:00:00+02:00',
+  }))
 
   const auditEvents: AuditEvent[] = [
     {
@@ -459,6 +484,7 @@ export function createExampleSnapshot(): OfficialsSnapshot {
     memberships,
     officialAssignments: [],
     joinCodes,
+    staffCodes,
     contentReleases: [
       {
         id: RELEASE_ID,
@@ -535,6 +561,7 @@ function code(
   cellphone: string,
   usedAt: string | null,
   withdrawnAt: string | null,
+  expiresAt = '2026-11-10T15:00:00+02:00',
 ): JoinCode {
   return {
     id,
@@ -542,7 +569,7 @@ function code(
     code: value,
     cellphone,
     intendedRole: 'nsnp_coordinator',
-    expiresAt: '2026-11-10T15:00:00+02:00',
+    expiresAt,
     usedAt,
     withdrawnAt,
     issuedBy: OFFICIAL_MEMBERSHIP,
