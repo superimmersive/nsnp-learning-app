@@ -28,6 +28,15 @@ function siteBase(): string {
   return withLeading.endsWith('/') ? withLeading : `${withLeading}/`
 }
 
+/**
+ * GitHub Pages publishes under a repository subpath (`BASE_PATH`).
+ * The native shells serve the same build from the WebView root, so that
+ * mode always uses `/` even if `BASE_PATH` is set in the environment.
+ */
+function baseForMode(mode: string): string {
+  return mode === 'native' ? '/' : siteBase()
+}
+
 function precacheServiceWorker(): Plugin {
   let base = '/'
   return {
@@ -93,9 +102,12 @@ self.addEventListener('fetch', (event) => {
   }
 }
 
-export default defineConfig({
-  base: siteBase(),
-  plugins: [react(), tailwindcss(), precacheServiceWorker()],
+export default defineConfig(({ mode }) => ({
+  base: baseForMode(mode),
+  plugins:
+    mode === 'native'
+      ? [react(), tailwindcss()]
+      : [react(), tailwindcss(), precacheServiceWorker()],
   resolve: {
     alias: {
       '@': path.join(rootDir, 'src'),
@@ -115,4 +127,4 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
   },
-})
+}))
