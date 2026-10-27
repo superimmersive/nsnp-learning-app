@@ -27,4 +27,18 @@ describe('app smoke', () => {
     expect(renderAt('/checklists/monthly-forms')).toContain('Stock-left column')
     expect(renderAt('/calculator')).toContain('Estimate')
   })
+
+  it('keeps the school home separate from the officials dashboard', () => {
+    const home = renderAt('/')
+    expect(home).toContain('NSNP 2026 roadshow')
+    expect(home).not.toContain('/officials')
+    expect(home).not.toContain('Example data - trial prototype')
+  })
+
+  it('opens the district dashboard on its own route', () => {
+    const html = renderAt('/officials')
+    expect(html).toContain('Example data - trial prototype')
+    expect(html).toContain('Eden and Central Karoo')
+    expect(html).toContain('Active schools')
+  })
 })
