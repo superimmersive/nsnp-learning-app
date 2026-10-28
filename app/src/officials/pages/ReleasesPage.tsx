@@ -22,7 +22,7 @@ export function ReleasesPage() {
           <article key={release.id} className="rounded-xl border border-line bg-white p-4">
             <h2 className="font-semibold text-navy">{LOCALE[release.locale] ?? release.locale}</h2>
             <p className="mt-2 text-sm">{release.note}</p>
-            <p className="mt-2 text-sm text-muted">
+            <p className="mt-2 break-words text-sm text-muted">
               Published {formatWhen(release.publishedAt)}. Reference {release.contentHash}.
             </p>
           </article>

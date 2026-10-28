@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { trialListCsv } from '../csv'
 import { schoolRows, toneLabel } from '../metrics'
 import { useOfficials } from '../store'
+import { ToneBadge } from '../ui'
 
 export function ExportPage() {
   const { snapshot } = useOfficials()
@@ -35,7 +36,23 @@ export function ExportPage() {
         <p className="text-sm text-muted">{rows.length} schools</p>
       </div>
       {saved && <p className="mt-3 text-sm text-navy">The file download has started.</p>}
-      <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-white">
+      <ul className="mt-6 grid gap-2 sm:hidden">
+        {rows.map((row) => (
+          <li key={row.schoolId} className="rounded-xl border border-line bg-white p-3 text-sm">
+            <span className="flex items-start justify-between gap-2">
+              <span className="min-w-0">
+                <span className="block font-semibold text-navy">{row.name}</span>
+                <span className="text-muted">EMIS {row.schoolNumber}</span>
+              </span>
+              <ToneBadge tone={row.tone} />
+            </span>
+            <p className="mt-2">
+              {row.coordinator} · {row.modulesPassed} modules passed
+            </p>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-6 hidden overflow-x-auto rounded-xl border border-line bg-white sm:block">
         <table className="w-full min-w-[36rem] text-left text-sm">
           <thead className="bg-paper text-navy">
             <tr>

@@ -9,7 +9,7 @@ import {
   trialMetrics,
 } from './metrics'
 import type { DailyFeedingStat } from './types'
-import { expectedFeedingDay, feedingPeriod, recentFeedingDays } from './time'
+import { expectedFeedingDay, feedingPeriod, formatMonth, recentFeedingDays } from './time'
 
 function stat(partial: Partial<DailyFeedingStat> & Pick<DailyFeedingStat, 'id' | 'feedingDate' | 'clientRecordedAt'>): DailyFeedingStat {
   return {
@@ -138,6 +138,14 @@ describe('monthly forms and school status', () => {
   it('turns passed modules into a completion percentage', () => {
     expect(lessonCompletion(84, 19)).toEqual({ passed: 84, possible: 209, percent: 40 })
     expect(lessonCompletion(0, 0)).toEqual({ passed: 0, possible: 0, percent: 0 })
+  })
+})
+
+describe('month names', () => {
+  it('writes a feeding month as a word', () => {
+    expect(formatMonth('2026-10')).toBe('October 2026')
+    expect(formatMonth('2026-01')).toBe('January 2026')
+    expect(formatMonth('2026-12')).toBe('December 2026')
   })
 })
 

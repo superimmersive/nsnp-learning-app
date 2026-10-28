@@ -129,7 +129,52 @@ export function DistrictHomePage() {
             </button>
           ))}
         </div>
-        <div className="mt-3 overflow-x-auto rounded-xl border border-line bg-white">
+        <label className="mt-3 block text-sm font-semibold text-navy sm:hidden" htmlFor="school-sort">
+          Sort
+          <select
+            id="school-sort"
+            className="mt-1 block h-12 w-full rounded-lg border border-line bg-white px-3 text-base font-normal"
+            value={sortKey}
+            onChange={(event) => {
+              setSortKey(event.target.value as SortKey)
+              setDirection('asc')
+            }}
+          >
+            <option value="tone">Status</option>
+            <option value="name">School name</option>
+            <option value="schoolNumber">EMIS</option>
+            <option value="coordinator">Coordinator</option>
+            <option value="coordinatorPassed">Modules passed</option>
+            <option value="latestMark">Latest count</option>
+            <option value="monthly">Monthly forms</option>
+            <option value="openIssues">Issues</option>
+          </select>
+        </label>
+        <ul className="mt-3 grid gap-2 sm:hidden">
+          {visible.map((row) => (
+            <li key={row.schoolId}>
+              <Link to={`/officials/schools/${row.schoolId}`} className="block rounded-xl border border-line bg-white p-3">
+                <span className="flex items-start justify-between gap-2">
+                  <span className="min-w-0">
+                    <span className="block font-semibold text-navy">{row.name}</span>
+                    <span className="text-sm text-muted">EMIS {row.schoolNumber}</span>
+                  </span>
+                  <ToneBadge tone={row.tone} />
+                </span>
+                <span className="mt-2 block text-sm">
+                  {row.coordinator}
+                  {' · '}
+                  {row.hasApprovedCoordinator ? `${row.coordinatorPassed} of 11 passed` : 'No modules passed'}
+                </span>
+                <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                  <span>{row.latestMainMeal == null ? 'No count today' : `${row.latestMainMeal} fed today`}</span>
+                  <MonthlyBadge mark={row.monthly} />
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-3 hidden overflow-x-auto rounded-xl border border-line bg-white sm:block">
           <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
             <thead className="bg-paper text-navy">
               <tr>

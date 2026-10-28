@@ -12,7 +12,17 @@ export function AuditPage() {
         Example record of who changed a code, closed an issue, or opened a school. A reason is required when a
         super-admin opens a school. Feeding counts are not edited from this dashboard.
       </p>
-      <div className="mt-4 overflow-x-auto rounded-xl border border-line bg-white">
+      <ul className="mt-4 grid gap-2 sm:hidden">
+        {snapshot.auditEvents.map((event) => (
+          <li key={event.id} className="rounded-xl border border-line bg-white p-3 text-sm">
+            <p className="font-semibold text-navy">{formatWhen(event.at)}</p>
+            <p className="mt-1">{actorName(snapshot, event.actorMembershipId)}</p>
+            <p className="mt-1">{event.summary}</p>
+            {event.reason && <p className="mt-1">Reason: {event.reason}</p>}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-4 hidden overflow-x-auto rounded-xl border border-line bg-white sm:block">
         <table className="w-full min-w-[40rem] text-left text-sm">
           <thead className="bg-paper text-navy">
             <tr>

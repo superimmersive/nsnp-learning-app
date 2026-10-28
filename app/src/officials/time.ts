@@ -115,6 +115,30 @@ export function formatWhen(iso: string): string {
   }).format(new Date(iso))
 }
 
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
+
+/** `2026-10` becomes `October 2026`. */
+export function formatMonth(period: string): string {
+  const match = /^(\d{4})-(\d{2})$/.exec(period)
+  if (!match) return period
+  const name = MONTHS[Number(match[2]) - 1]
+  if (!name) return period
+  return `${name} ${match[1]}`
+}
+
 export function formatDate(isoDate: string): string {
   const [year, month, day] = isoDate.split('-').map(Number)
   return new Intl.DateTimeFormat('en-GB', {

@@ -5,7 +5,7 @@ import { countMark, MODULES, monthlyMark, peopleAtSchool, roleLabel, schoolRows 
 import { useOfficials } from '../store'
 import { kindLabel } from '../present'
 import { CountBadge, IssueActions, MonthlyBadge, Section, ToneBadge } from '../ui'
-import { formatDate, formatWhen, monthlyDueDate } from '../time'
+import { formatDate, formatMonth, formatWhen, monthlyDueDate } from '../time'
 import type { ViewerRole } from '../types'
 
 export function SchoolPage() {
@@ -104,7 +104,19 @@ export function SchoolPage() {
 
       <Section title="Modules passed">
         <p className="text-sm text-muted">Passed modules only. Individual quiz answers are not shown.</p>
-        <div className="mt-3 overflow-x-auto rounded-xl border border-line bg-white">
+        <ul className="mt-3 grid gap-2 sm:hidden">
+          {people.length === 0 && <li className="text-sm">Nobody has joined this school yet.</li>}
+          {people.map((person) => (
+            <li key={person.membershipId} className="rounded-xl border border-line bg-white p-3 text-sm">
+              <p className="font-semibold text-navy">{person.name}</p>
+              <p className="mt-1">
+                {roleLabel(person.role)} · {person.status === 'active' ? 'Approved' : 'Waiting for approval'}
+              </p>
+              <p className="mt-1">{person.passed} of 11 passed</p>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-3 hidden overflow-x-auto rounded-xl border border-line bg-white sm:block">
           <table className="w-full min-w-[28rem] text-left text-sm">
             <thead className="bg-paper text-navy">
               <tr>
@@ -153,7 +165,23 @@ export function SchoolPage() {
       </Section>
 
       <Section title="Daily feeding counts">
-        <div className="overflow-x-auto rounded-xl border border-line bg-white">
+        <ul className="grid gap-2 sm:hidden">
+          {stats.length === 0 && <li className="text-sm">No counts yet.</li>}
+          {stats.map((stat) => (
+            <li key={stat.id} className="rounded-xl border border-line bg-white p-3 text-sm">
+              <span className="flex items-start justify-between gap-2">
+                <span className="font-semibold text-navy">{formatDate(stat.feedingDate)}</span>
+                <CountBadge mark={countMark(stat)} />
+              </span>
+              <p className="mt-2">
+                Breakfast {stat.breakfastFed} · Main meal {stat.mainMealFed}
+              </p>
+              <p className="mt-1">Recorded {formatWhen(stat.clientRecordedAt)}</p>
+              <p className="mt-1">Received {formatWhen(stat.serverReceivedAt)}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="hidden overflow-x-auto rounded-xl border border-line bg-white sm:block">
           <table className="w-full min-w-[40rem] text-left text-sm">
             <thead className="bg-paper text-navy">
               <tr>
@@ -199,7 +227,7 @@ export function SchoolPage() {
             return (
               <article key={pack.id} className="rounded-xl border border-line bg-white p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <h3 className="font-semibold text-navy">{pack.period}</h3>
+                  <h3 className="font-semibold text-navy">{formatMonth(pack.period)}</h3>
                   <MonthlyBadge mark={mark} />
                 </div>
                 <ul className="mt-3 space-y-1 text-sm">

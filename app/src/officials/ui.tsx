@@ -6,18 +6,41 @@ import { countMarkLabel, monthlyMarkLabel, toneLabel, type CountMark, type Month
 import { toneClass } from './present'
 import { useOfficials } from './store'
 
+function Chip({
+  tone,
+  long,
+  short,
+}: {
+  tone: SchoolTone
+  long: string
+  short: string
+}) {
+  return (
+    <Badge className={`max-w-full whitespace-nowrap ${toneClass(tone)}`}>
+      <span className="sm:hidden">{short}</span>
+      <span className="hidden sm:inline">{long}</span>
+    </Badge>
+  )
+}
+
 export function ToneBadge({ tone }: { tone: SchoolTone }) {
-  return <Badge className={toneClass(tone)}>{toneLabel(tone)}</Badge>
+  const long = toneLabel(tone)
+  const short = tone === 'red' ? 'Look' : long
+  return <Chip tone={tone} long={long} short={short} />
 }
 
 export function CountBadge({ mark }: { mark: CountMark }) {
   const tone: SchoolTone = mark === 'on_time' ? 'green' : mark === 'missing' ? 'red' : 'amber'
-  return <Badge className={toneClass(tone)}>{countMarkLabel(mark)}</Badge>
+  const long = countMarkLabel(mark)
+  const short = mark === 'check_time' ? 'Time' : mark === 'missing' ? 'None' : long
+  return <Chip tone={tone} long={long} short={short} />
 }
 
 export function MonthlyBadge({ mark }: { mark: MonthlyMark }) {
   const tone: SchoolTone = mark === 'confirmed' ? 'green' : mark === 'late' ? 'red' : 'amber'
-  return <Badge className={toneClass(tone)}>{monthlyMarkLabel(mark)}</Badge>
+  const long = monthlyMarkLabel(mark)
+  const short = mark === 'confirmed' ? 'Confirmed' : mark === 'not_yet' ? 'Not yet' : long
+  return <Chip tone={tone} long={long} short={short} />
 }
 
 export function MetricCard({

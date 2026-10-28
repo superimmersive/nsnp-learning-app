@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { makeJoinCode } from '../actions'
 import { actorName, maskPhone, roleLabel } from '../metrics'
 import { useOfficials } from '../store'
-import { fieldClass } from '../present'
+import { fieldClass, selectClass } from '../present'
 import { Section } from '../ui'
 import { formatDate } from '../time'
 import type { JoinCode } from '../types'
@@ -54,13 +54,16 @@ export function CodesPage() {
           <label className="text-sm font-semibold text-navy" htmlFor="code-school">
             School
           </label>
-          <select id="code-school" className={fieldClass()} value={schoolId} onChange={(event) => setSchoolId(event.target.value)}>
+          <select id="code-school" className={selectClass()} value={schoolId} onChange={(event) => setSchoolId(event.target.value)}>
             {schools.map((school) => (
               <option key={school.id} value={school.id}>
-                {school.name} ({school.schoolNumber})
+                {school.name.replace(' Example', '')} · {school.schoolNumber}
               </option>
             ))}
           </select>
+          <p className="text-sm font-normal text-ink">
+            {schools.find((school) => school.id === schoolId)?.name ?? 'Choose a school'}
+          </p>
           <label className="text-sm font-semibold text-navy" htmlFor="code-phone">
             Coordinator cellphone
           </label>
@@ -78,7 +81,7 @@ export function CodesPage() {
           </label>
           <select
             id="code-role"
-            className={fieldClass()}
+            className={selectClass()}
             value={intendedRole}
             onChange={(event) => setIntendedRole(event.target.value as IntendedRole)}
           >
