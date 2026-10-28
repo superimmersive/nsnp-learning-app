@@ -19,7 +19,7 @@ The first release is an **in-field proof of concept**, not a province-wide syste
 
 A short version of the recommendation:
 
-Run the trial in Eden and Central Karoo only. District officials hand each school a join code. The coordinator approves the rest of the staff. Store accounts, quiz progress, certificates, daily counts, monthly-form confirmations, and issue reports in PostgreSQL with row-level security, in a South African data centre (Azure South Africa North is the preferred host). Give both officials the same view of every trial school unless the district chooses to split the list. Keep province admin and further districts as a later phase. Ship the first Play Store and App Store build as the lesson app without accounts. The trial itself can run from the website.
+Run the trial in Eden and Central Karoo only. District officials hand each school a join code. The coordinator approves the rest of the staff. Store accounts, quiz progress, certificates, daily counts, monthly-form confirmations, and issue reports in PostgreSQL with row-level security. The free trial host is Supabase in London (eu-west-2), because Supabase has no South African region, with the API as a Supabase Edge Function and the website on Vercel Hobby. Trial data is therefore hosted in London. POPIA cross-border processing needs WCED's written OK before real names and cellphone numbers go in. The schema is plain Postgres, so a dump can move it to South African hosting later. Give both officials the same view of every trial school unless the district chooses to split the list. Keep province admin and further districts as a later phase. Ship the first Play Store and App Store build as the lesson app without accounts. The trial itself can run from the website.
 
 ---
 
@@ -742,7 +742,7 @@ Row-level security in the database enforces the matrix in section 1, so a bug in
 
 ### Where it lives
 
-Personal information should be hosted in South Africa. Azure South Africa North (Johannesburg) can do that for the database and the API. Section 7 compares the options. If a host outside the country is ever used, even for this trial, POPIA’s rules on cross-border processing apply and WCED legal has to accept that in writing. Logs, backups, and the SMS provider have to be named in that decision, not only the database.
+Personal information should be hosted in South Africa. The free trial does not do that. Supabase has no South African region, so the trial project `nsnp-trial` (`ickpnerjcfpgxspvgdzo`) runs in London (eu-west-2). Trial data is hosted in London. POPIA’s rules on cross-border processing apply, and WCED legal has to accept that in writing before real names and cellphone numbers are stored. Logs, backups, and the SMS provider have to be named in that decision, not only the database. The schema is ordinary PostgreSQL, so a dump can move the same tables to a South African host later (the archived Azure template in `infra/azure-later/` is one option). Until that written OK exists, the database should hold only the fictional seed.
 
 GitHub Pages, which serves the website at superimmersive.io/nsnp-learning-app, continues to serve lessons only. It does not receive names, scores, or counts.
 
@@ -825,9 +825,9 @@ Sending an OTP every morning would multiply this by the number of feeding days. 
 
 ### Recommendation
 
-Use **PostgreSQL with row-level security, hosted in Azure South Africa North**, with a small API the website and the Capacitor apps both call. The trial database is the one in section 2: one district, its schools, school staff, two district officials, one Superimmersive admin. Sign-in is the school join code plus a one-time SMS from a South African gateway where WCED has one, then a device PIN.
+Use **PostgreSQL with row-level security**. For this free trial the database is the Supabase project in London (eu-west-2) and the API is one Supabase Edge Function. The website can be hosted on Vercel Hobby. The trial database is the one in section 2: one district, its schools, school staff, two district officials, one Superimmersive admin. Sign-in is the school join code plus a one-time SMS from a South African gateway where WCED has one, then a device PIN.
 
-Use Supabase only as a short prototype if WCED legal first accepts personal information outside South Africa, and move the same schema to Azure before trial data is kept. Do not use the Supabase free tier. Do not use Firebase as the system of record.
+Supabase has no South African region, so trial data is hosted in London. That is a POPIA cross-border transfer. Do not load real names or cellphone numbers until WCED has accepted it in writing. The schema is plain Postgres, so a dump moves it to South African hosting later. Do not use Firebase as the system of record. The free Supabase plan pauses after a week without activity, stores 500 MB, and caps Edge Function invocations. A weekly `GET /healthz` keeps the project from pausing.
 
 Superimmersive remains the operator. WCED remains the assumed responsible party until the open question is closed in writing.
 
@@ -908,7 +908,7 @@ Three of these block the trial seed. The rest should be answered before the firs
 10. **Certificate.** It stays a learning record unless WCED says the district should treat it as official.
 11. **Governing-body accounts.** Not in the trial. Learners stay off the system. Say if that should change later.
 12. **Honorarium band on the monthly screen.** Off unless the department wants volunteers and amount paid captured here as well as on the paper proof of payment.
-13. **Cloud and SMS.** Azure South Africa North is the recommendation. Name a different cloud if WCED requires one. Name a departmental SMS account if one should be used.
+13. **Cloud and SMS.** The free trial runs on Supabase in London and Vercel Hobby. WCED must accept that cross-border hosting in writing before real personal information is stored, or the trial moves to a South African Postgres host. Name a departmental SMS account if one should be used.
 
 ---
 

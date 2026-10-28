@@ -29,7 +29,6 @@ jobs:
           cache-dependency-path: app/package-lock.json
 
       - name: Configure Pages
-        id: pages
         uses: actions/configure-pages@v5
 
       - name: Install
@@ -40,7 +39,10 @@ jobs:
         working-directory: app
         run: npm run build
         env:
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          BASE_PATH: /nsnp-learning-app
+          VITE_API_URL: https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api
+          # Public Supabase publishable key, not a secret. A repository variable overrides it.
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || 'sb_publishable_Tp_zVipe-f-IG1fL__XW0w_61Yg_Mfv' }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

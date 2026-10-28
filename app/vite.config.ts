@@ -51,7 +51,7 @@ function precacheServiceWorker(): Plugin {
       const files = walkFiles(dist)
         .map((file) => `${prefix}/${path.relative(dist, file).split(path.sep).join('/')}`)
         .filter((file) => file !== `${prefix}/sw.js`)
-      const cacheName = `nsnp-${Date.now().toString(36)}`
+      const cacheName = `nsnp-v2-${Date.now().toString(36)}`
       const source = `const CACHE = ${JSON.stringify(cacheName)}
 const ASSETS = ${JSON.stringify(files)}
 
@@ -78,22 +78,37 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return
   const url = new URL(request.url)
   if (url.origin !== self.location.origin) return
+  if (url.pathname.endsWith('/sw.js')) return
+
+  const page = ${JSON.stringify(`${prefix}/index.html`)}
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok && response.type === 'basic') {
+            const copy = response.clone()
+            caches.open(CACHE).then((cache) => cache.put(request, copy))
+          }
+          if (!response || !response.ok) return caches.match(page).then((cached) => cached || response)
+          return response
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match(page))),
+    )
+    return
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached
       return fetch(request)
         .then((response) => {
-          if (request.mode === 'navigate' && (!response || !response.ok)) {
-            return caches.match(${JSON.stringify(`${prefix}/index.html`)}).then((page) => page || response)
-          }
           if (response && response.ok && response.type === 'basic') {
             const copy = response.clone()
             caches.open(CACHE).then((cache) => cache.put(request, copy))
           }
           return response
         })
-        .catch(() => (request.mode === 'navigate' ? caches.match(${JSON.stringify(`${prefix}/index.html`)}) : undefined))
+        .catch(() => undefined)
     }),
   )
 })
@@ -130,6 +145,11 @@ export default defineConfig(({ mode }) => ({
   },
   test: {
     environment: 'node',
+    // Example-data tests stay in mock mode even if the machine has an API URL.
+    env: {
+      VITE_API_URL: '',
+      VITE_SUPABASE_ANON_KEY: '',
+    },
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
   },
 }))

@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { loadProgress } from '@/lib/progress'
 import { fieldClass } from '@/officials/present'
+import { ApiError, apiSend } from '@/sync/client'
+import { apiBase } from '@/sync/config'
 import { checkSmsCode, DEMO_SMS_CODE } from '../access'
 import { claimFromDraft, hasStoredLessons } from '../join'
 import { prototypeStorage } from '../storage'
@@ -30,6 +32,29 @@ export function SmsPage() {
   function submit(event: FormEvent) {
     event.preventDefault()
     if (!draft?.agreed) return
+    if (apiBase()) {
+      void (async () => {
+        try {
+          const json = (await apiSend('/v1/auth/sms/verify', {
+            body: { cellphone: draft.cellphone, code: typed.trim(), purpose: 'join' },
+          })) as { token?: string; userId?: string }
+          const stored = loadProgress(prototypeStorage())
+          const ask = phone.existingProgressChoice == null && hasStoredLessons(stored)
+          replacePhone({
+            ...phone,
+            activeUserId: json.userId ?? draft.remoteUserId ?? phone.activeUserId,
+            apiToken: json.token ?? null,
+            syncStatus: 'saved',
+            continueTo: draft.continueTo,
+            draft: null,
+          })
+          navigate(ask ? '/join/existing' : draft.continueTo)
+        } catch (caught) {
+          setError(caught instanceof ApiError ? caught.message : 'That code does not match.')
+        }
+      })()
+      return
+    }
     if (!checkSmsCode(typed)) {
       setError('That code does not match. Use the demo code shown on this screen.')
       return
@@ -57,7 +82,9 @@ export function SmsPage() {
         A real phone would get a text message. This prototype shows the code here instead. It is not stored after you
         use it.
       </p>
-      <p className="mt-4 rounded-xl bg-gold-soft px-4 py-4 text-lg font-semibold text-navy">Demo SMS code: {DEMO_SMS_CODE}</p>
+      <p className="mt-4 rounded-xl bg-gold-soft px-4 py-4 text-lg font-semibold text-navy">
+        Demo SMS code: {draft.demoCode ?? DEMO_SMS_CODE}
+      </p>
       <form onSubmit={submit} className="mt-4 grid gap-3">
         <label className="grid gap-1 text-sm font-semibold text-navy" htmlFor="sms-code">
           One-time code

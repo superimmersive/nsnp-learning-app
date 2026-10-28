@@ -1,0 +1,59 @@
+name: Trial API
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: nsnp_migrator
+          POSTGRES_PASSWORD: nsnp_migrator
+          POSTGRES_DB: nsnp_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U nsnp_migrator -d nsnp_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+      - name: Test the API
+        working-directory: api
+        env:
+          DATABASE_URL: postgres://nsnp_migrator:nsnp_migrator@127.0.0.1:5432/nsnp_test
+          DATABASE_APP_URL: postgres://nsnp_app:nsnp_app@127.0.0.1:5432/nsnp_test
+          SMS_PROVIDER: console
+          SMS_PEPPER: test-sms
+          TOKEN_PEPPER: test-token
+          PIN_PEPPER: test-pin
+        run: |
+          npm ci
+          npm test
+
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Test the website
+        working-directory: app
+        run: |
+          npm ci
+          npm test
+          npm run lint

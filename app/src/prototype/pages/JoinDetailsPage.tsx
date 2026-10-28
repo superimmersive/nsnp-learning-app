@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { fieldClass } from '@/officials/present'
+import { apiBase } from '@/sync/config'
 import { checkCoordinatorCode, checkStaffCode, codeProblemText, phoneDigits, type CodeProblem } from '../access'
 import type { JoinPath, StaffJoinRole } from '../phone'
 import { usePrototype } from '../store'
@@ -33,6 +34,25 @@ export function JoinDetailsPage({ path }: { path: JoinPath }) {
     }
     if (phoneDigits(cellphone).length < 10) {
       setFormError('Enter a cellphone number with at least 10 digits.')
+      return
+    }
+    if (apiBase()) {
+      replacePhone({
+        ...phone,
+        draft: {
+          path,
+          code: code.trim().toUpperCase(),
+          firstName: firstName.trim(),
+          surname: surname.trim(),
+          cellphone: cellphone.trim(),
+          role: path === 'coordinator' ? 'nsnp_coordinator' : role,
+          schoolId: '',
+          joinCodeId: null,
+          agreed: false,
+          continueTo: path === 'coordinator' ? '/join/pin' : '/join/waiting',
+        },
+      })
+      navigate('/join/notice')
       return
     }
     const now = new Date().toISOString()

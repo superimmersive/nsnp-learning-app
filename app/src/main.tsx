@@ -32,7 +32,7 @@ if (native) {
 
 if ('serviceWorker' in navigator && import.meta.env.PROD && !native) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, { updateViaCache: 'none' }).catch(() => {
       // A failed worker must not stop the lessons from opening.
     })
   })
