@@ -84,6 +84,9 @@ self.addEventListener('fetch', (event) => {
       if (cached) return cached
       return fetch(request)
         .then((response) => {
+          if (request.mode === 'navigate' && (!response || !response.ok)) {
+            return caches.match(${JSON.stringify(`${prefix}/index.html`)}).then((page) => page || response)
+          }
           if (response && response.ok && response.type === 'basic') {
             const copy = response.clone()
             caches.open(CACHE).then((cache) => cache.put(request, copy))
@@ -97,7 +100,9 @@ self.addEventListener('fetch', (event) => {
 `
       writeFileSync(path.join(dist, 'sw.js'), source)
       copyFileSync(path.join(dist, 'index.html'), path.join(dist, '404.html'))
+      copyFileSync(path.join(dist, 'index.html'), path.join(dist, '200.html'))
       writeFileSync(path.join(dist, '.nojekyll'), '')
+      writeFileSync(path.join(dist, '_redirects'), '/* /index.html 200\n')
     },
   }
 }
