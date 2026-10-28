@@ -92,3 +92,12 @@ VALUES (
   'mem-official-1'
 )
 ON CONFLICT (id) DO NOTHING;
+
+-- TEST ONLY. Fixed SMS code so the trial-test setup can type 123456.
+-- Turn this off before any real user is added:
+-- UPDATE private_config SET value = '' WHERE name = 'DEV_FIXED_OTP';
+INSERT INTO private_config (name, value)
+VALUES
+  ('SMS_PROVIDER', 'console'),
+  ('DEV_FIXED_OTP', '123456')
+ON CONFLICT (name) DO NOTHING;

@@ -107,19 +107,29 @@ Run these files in the Supabase SQL editor, or through the management connector,
 1. `supabase/migrations/20261028100000_schema.sql`
 2. `supabase/migrations/20261028100100_rls.sql`
 3. `supabase/migrations/20261028100200_dispatch.sql`
-4. `supabase/seed.sql` (fictional schools only; not a migration)
+4. `supabase/migrations/20261028100300_dispatch_ops.sql` (replaces `dispatch` with monthly packs, count corrections, issue close, number change, and device check-in)
+5. `supabase/migrations/20261028100400_vault_and_config.sql` (Vault pepper and private settings)
+6. `supabase/seed.sql` (fictional schools only; not a migration)
 
 ### Edge Function
 
-Deploy the folder `supabase/functions/api` (`index.ts`, relative imports, `deno.json`). Supabase injects `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Set `SESSION_SECRET` in the function secrets. Do not commit those values.
+Deploy the folder `supabase/functions/api` (`index.ts`, relative imports, `deno.json`). Supabase injects `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. You do not need a secrets API. If `SESSION_SECRET` is unset, the function reads Vault through `public.session_secret()`, which only `service_role` can execute. The vault migration creates `nsnp_session_secret` with `gen_random_bytes` when that name is missing. The value never appears in git. If neither the environment nor Vault has it, the function returns 500 and does not sign anyone in.
+
+`SMS_PROVIDER` and `DEV_FIXED_OTP` are not secrets. If the environment variable is blank, the function reads `private_config`. That table has row-level security on and no policies, so `anon` and `authenticated` cannot read it. The seed sets `DEV_FIXED_OTP` to `123456` for the trial-test setup only. Turn that off before a real user is added:
+
+```sql
+UPDATE private_config SET value = '' WHERE name = 'DEV_FIXED_OTP';
+```
+
+The browser calls the function with the public anon key in the `apikey` header. The function answers `OPTIONS` and allows `https://*.vercel.app`, `https://superimmersive.io`, and `https://*.superimmersive.io`. Vite bakes `VITE_SUPABASE_ANON_KEY` into the website at build time, so set it in the Vercel project before building. It is a public key. The function does not treat it as a login.
 
 | Variable | Purpose |
 | --- | --- |
 | `SUPABASE_URL` | Provided on the function. Project URL. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Provided on the function. Used only inside the function to call `dispatch`. |
-| `SESSION_SECRET` | You set this. Hashes session tokens, SMS codes, and PINs. |
-| `SMS_PROVIDER` | Optional. `console` (default) logs the code. `local-sa` and `twilio` are stubs and do not send. |
-| `DEV_FIXED_OTP` | Optional. Off unless set, for example `123456`. Forces that SMS code so a test can type it. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Provided on the function. Used only inside the function to call `dispatch` and `session_secret`. |
+| `SESSION_SECRET` | Optional. If unset, Vault name `nsnp_session_secret` is used. Hashes session tokens, SMS codes, and PINs. |
+| `SMS_PROVIDER` | Optional. If unset, `private_config` is used, otherwise `console` logs the code. `local-sa` and `twilio` are stubs and do not send. |
+| `DEV_FIXED_OTP` | Optional. If unset, `private_config` is used. The seed value `123456` is test-only. A blank value turns it off. |
 
 The function URL is `https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api`.
 
@@ -151,7 +161,7 @@ npm ci
 npm test
 ```
 
-`npm test` applies `supabase/migrations`, loads `supabase/seed.sql`, and checks row-level security, join codes, the 7-day PIN lock, certificates, and Edge Function route matching. Docker Compose still starts a local Postgres and the Node API for the same schema.
+`npm test` applies `supabase/migrations`, loads `supabase/seed.sql`, and checks row-level security, join codes, the 7-day PIN lock, certificates, monthly packs, count corrections, issue close, number change, device check-in, the private config lock, and Edge Function route matching. Docker Compose still starts a local Postgres and the Node API for the same schema.
 
 ### Free-plan limits
 

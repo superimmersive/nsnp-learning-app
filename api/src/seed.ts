@@ -14,7 +14,7 @@ export async function resetTrial(owner: pg.Pool) {
       session, device_pin, device, sms_code, phone_change, consent_record, audit_event,
       issue_report, monthly_pack, daily_feeding_stat, checklist_snapshot, certificate,
       quiz_attempt, module_progress, staff_code, join_code, official_assignment,
-      membership, person, content_release, school, district, province
+      membership, person, content_release, school, district, province, private_config
     RESTART IDENTITY CASCADE
   `)
 }
