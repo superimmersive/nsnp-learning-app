@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button'
 import { roleLabel } from '@/officials/metrics'
 import { fieldClass } from '@/officials/present'
 import { formatWhen } from '@/officials/time'
+import { apiSend } from '@/sync/client'
+import { apiBase } from '@/sync/config'
+import { enqueueOutbox, flushOutbox } from '@/sync/outbox'
 import { nowIso, pinSwitchAllowed } from '../access'
+import { prototypeStorage } from '../storage'
 import { usePrototype } from '../store'
 
 const openedAt = nowIso()
@@ -62,9 +66,30 @@ export function PhonePage() {
         Lessons and drafts stay on the phone until they are sent. Each item stays with the person who made it.
       </p>
       {phone.syncStatus === 'saved' && (
-        <Button type="button" variant="secondary" className="mt-3 h-14 w-full text-lg" onClick={() => replacePhone({ ...phone, syncStatus: 'sent' })}>
+        <Button
+          type="button"
+          variant="secondary"
+          className="mt-3 h-14 w-full text-lg"
+          onClick={() => {
+            const storage = prototypeStorage()
+            void flushOutbox(storage, async (item) => {
+              if (!apiBase()) return false
+              await apiSend(item.path, { token: item.token ?? undefined, body: item.body })
+              return true
+            }).then((result) => {
+              if (result.saved === 0) replacePhone({ ...phone, syncStatus: 'sent' })
+            })
+          }}
+        >
           Send now
         </Button>
+      )}
+      {activeMembership?.schoolId && (
+        <CountForm
+          schoolId={activeMembership.schoolId}
+          token={phone.apiToken}
+          onSaved={() => replacePhone({ ...phone, syncStatus: 'saved' })}
+        />
       )}
       <p className="mt-5 text-base">
         Using the phone now:{' '}
@@ -169,5 +194,51 @@ export function PhonePage() {
         People at this school
       </Link>
     </div>
+  )
+}
+
+function CountForm({ schoolId, token, onSaved }: { schoolId: string; token: string | null; onSaved: () => void }) {
+  const [mainMeal, setMainMeal] = useState('')
+  const [breakfast, setBreakfast] = useState('')
+
+  return (
+    <form
+      className="mt-4 grid gap-2 rounded-xl border border-line bg-white p-3"
+      onSubmit={(event) => {
+        event.preventDefault()
+        const clientId = crypto.randomUUID()
+        enqueueOutbox(prototypeStorage(), {
+          id: clientId,
+          path: `/v1/schools/${schoolId}/daily-stats`,
+          token,
+          createdAt: new Date().toISOString(),
+          body: {
+            clientId,
+            feedingDate: new Date().toISOString().slice(0, 10),
+            breakfastFed: Number(breakfast || 0),
+            mainMealFed: Number(mainMeal || 0),
+            mainMealTime: '12:20',
+            clientRecordedAt: new Date().toISOString(),
+          },
+        })
+        onSaved()
+        setMainMeal('')
+        setBreakfast('')
+      }}
+    >
+      <p className="font-semibold text-navy">Today's feeding count</p>
+      <p className="text-sm text-muted">If there is no signal, this stays on the phone until Send now.</p>
+      <label className="text-sm font-semibold text-navy" htmlFor="count-breakfast">
+        Breakfast
+        <input id="count-breakfast" inputMode="numeric" className={fieldClass('mt-1 h-12')} value={breakfast} onChange={(event) => setBreakfast(event.target.value)} />
+      </label>
+      <label className="text-sm font-semibold text-navy" htmlFor="count-main">
+        Main meal
+        <input id="count-main" inputMode="numeric" className={fieldClass('mt-1 h-12')} value={mainMeal} onChange={(event) => setMainMeal(event.target.value)} />
+      </label>
+      <Button type="submit" className="h-12">
+        Save count
+      </Button>
+    </form>
   )
 }

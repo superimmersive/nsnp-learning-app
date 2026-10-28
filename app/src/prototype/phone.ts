@@ -13,6 +13,9 @@ export type JoinDraft = {
   joinCodeId: string | null
   agreed: boolean
   continueTo: '/join/pin' | '/join/waiting'
+  demoCode?: string
+  remoteUserId?: string
+  remoteMembershipId?: string
 }
 
 export type PhoneSession = {
@@ -24,6 +27,7 @@ export type PhoneSession = {
   existingProgressChoice: 'yes' | 'no' | null
   continueTo: '/join/pin' | '/join/waiting' | null
   draft: JoinDraft | null
+  apiToken: string | null
 }
 
 /** PINs already on the shared kitchen phone in the example. They are not account passwords. */
@@ -42,5 +46,6 @@ export function createExamplePhone(nowIso: string): PhoneSession {
     existingProgressChoice: null,
     continueTo: null,
     draft: null,
+    apiToken: null,
   }
 }

@@ -3,12 +3,14 @@ import { useSearchParams } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { peopleAtSchool, roleLabel } from '@/officials/metrics'
 import { fieldClass } from '@/officials/present'
+import { apiSend } from '@/sync/client'
+import { apiBase, officialToken } from '@/sync/config'
 import { nowIso } from '../access'
 import { approverFor, decideMembership, refreshStaffCode } from '../join'
 import { usePrototype } from '../store'
 
 export function PeoplePage() {
-  const { snapshot, replaceSnapshot } = usePrototype()
+  const { snapshot, phone, replaceSnapshot } = usePrototype()
   const [params] = useSearchParams()
   const requested = params.get('school')
   const [schoolId, setSchoolId] = useState(
@@ -19,6 +21,24 @@ export function PeoplePage() {
   const school = snapshot.schools.find((item) => item.id === schoolId)
 
   function decide(membershipId: string, decision: 'active' | 'removed') {
+    const token = phone.apiToken || officialToken('district_official')
+    if (apiBase() && token) {
+      void apiSend(`/v1/memberships/${membershipId}/decision`, { token, body: { decision } })
+        .then(() => apiSend(`/v1/schools/${schoolId}/people`, { token }))
+        .then((json) => {
+          const remote = json as { memberships?: typeof snapshot.memberships; users?: typeof snapshot.users }
+          const memberships = [
+            ...snapshot.memberships.filter((item) => item.schoolId !== schoolId),
+            ...(remote.memberships ?? []),
+          ]
+          const users = [...snapshot.users]
+          for (const user of remote.users ?? []) {
+            if (!users.some((item) => item.id === user.id)) users.push(user)
+          }
+          replaceSnapshot({ ...snapshot, memberships, users })
+        })
+      return
+    }
     replaceSnapshot(decideMembership(snapshot, membershipId, decision, approverFor(snapshot, schoolId), nowIso()))
   }
 

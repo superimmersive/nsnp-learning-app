@@ -27,7 +27,7 @@ export function OfficialsLayout() {
 }
 
 function OfficialsFrame() {
-  const { snapshot, viewingAs, setViewingAs } = useOfficials()
+  const { snapshot, viewingAs, setViewingAs, remote, supportReason, setSupportReason, remoteError } = useOfficials()
   const location = useLocation()
   const extra =
     viewingAs === 'super_admin'
@@ -103,6 +103,24 @@ function OfficialsFrame() {
         </span>
       </p>
       <main id="content" tabIndex={-1} className="mx-auto w-full max-w-6xl px-4 py-6 pb-16 outline-none">
+        {remote && viewingAs === 'super_admin' && !supportReason.trim() && (
+          <form
+            className="mb-4 max-w-lg rounded-xl border border-line bg-white p-4"
+            onSubmit={(event) => {
+              event.preventDefault()
+              const data = new FormData(event.currentTarget)
+              setSupportReason(String(data.get('reason') ?? '').trim())
+            }}
+          >
+            <h1 className="text-xl font-semibold text-navy">Reason for opening the trial</h1>
+            <p className="mt-2 text-sm">Super-admin access is written to the audit log.</p>
+            <input name="reason" required className="mt-3 h-12 w-full rounded-lg border border-line px-3" />
+            <button type="submit" className="mt-3 h-12 rounded-lg bg-navy px-4 font-semibold text-white">
+              Continue
+            </button>
+          </form>
+        )}
+        {remoteError && <p className="mb-4 rounded-lg bg-bad-soft px-4 py-3 text-sm text-bad">{remoteError}</p>}
         <Outlet />
       </main>
     </div>

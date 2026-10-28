@@ -1,10 +1,14 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Button } from '@/components/ui/button'
+import { ApiError, apiSend } from '@/sync/client'
+import { apiBase } from '@/sync/config'
 import { usePrototype } from '../store'
 
 export function NoticePage() {
   const { phone, replacePhone } = usePrototype()
   const navigate = useNavigate()
+  const [error, setError] = useState('')
   const draft = phone.draft
 
   if (!draft) {
@@ -36,12 +40,48 @@ export function NoticePage() {
           officer.
         </p>
       </div>
+      {error && (
+        <p className="mt-4 text-sm text-bad" role="alert">
+          {error}
+        </p>
+      )}
       <Button
         type="button"
         className="mt-6 h-14 w-full text-lg"
         onClick={() => {
-          replacePhone({ ...phone, draft: { ...draft, agreed: true } })
-          navigate('/join/sms')
+          void (async () => {
+            if (apiBase()) {
+              try {
+                const json = (await apiSend(draft.path === 'coordinator' ? '/v1/join/coordinator' : '/v1/join/staff', {
+                  body: {
+                    code: draft.code,
+                    firstName: draft.firstName,
+                    surname: draft.surname,
+                    cellphone: draft.cellphone,
+                    role: draft.role,
+                    consent: true,
+                  },
+                })) as { demoCode?: string; userId?: string; membershipId?: string; schoolId?: string }
+                replacePhone({
+                  ...phone,
+                  draft: {
+                    ...draft,
+                    agreed: true,
+                    schoolId: json.schoolId ?? draft.schoolId,
+                    demoCode: json.demoCode,
+                    remoteUserId: json.userId,
+                    remoteMembershipId: json.membershipId,
+                  },
+                })
+              } catch (caught) {
+                setError(caught instanceof ApiError ? caught.message : 'The code was not accepted')
+                return
+              }
+            } else {
+              replacePhone({ ...phone, draft: { ...draft, agreed: true } })
+            }
+            navigate('/join/sms')
+          })()
         }}
       >
         I agree
