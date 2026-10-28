@@ -1,20 +1,23 @@
+-- Standalone schema for the NSNP trial. Safe to run again.
+-- Table person is the plan's user table. Ids are text we choose, not generated.
+
 -- Phase 1 trial schema. Table `person` is the plan's `user` table
 -- (`user` is a reserved word). Internal ids are text so the website can
 -- keep the same identifiers it already uses.
 
-CREATE TABLE province (
+CREATE TABLE IF NOT EXISTS province (
   id text PRIMARY KEY,
   name text NOT NULL
 );
 
-CREATE TABLE district (
+CREATE TABLE IF NOT EXISTS district (
   id text PRIMARY KEY,
   province_id text NOT NULL REFERENCES province (id),
   name text NOT NULL,
   active boolean NOT NULL DEFAULT true
 );
 
-CREATE TABLE school (
+CREATE TABLE IF NOT EXISTS school (
   id text PRIMARY KEY,
   district_id text NOT NULL REFERENCES district (id),
   school_number text NOT NULL UNIQUE,
@@ -25,7 +28,7 @@ CREATE TABLE school (
   active boolean NOT NULL DEFAULT true
 );
 
-CREATE TABLE person (
+CREATE TABLE IF NOT EXISTS person (
   id text PRIMARY KEY,
   first_name text NOT NULL,
   surname text NOT NULL,
@@ -35,7 +38,7 @@ CREATE TABLE person (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE membership (
+CREATE TABLE IF NOT EXISTS membership (
   id text PRIMARY KEY,
   user_id text NOT NULL REFERENCES person (id),
   role text NOT NULL CHECK (role IN (
@@ -58,13 +61,13 @@ CREATE TABLE membership (
   )
 );
 
-CREATE TABLE official_assignment (
+CREATE TABLE IF NOT EXISTS official_assignment (
   membership_id text NOT NULL REFERENCES membership (id),
   school_id text NOT NULL REFERENCES school (id),
   PRIMARY KEY (membership_id, school_id)
 );
 
-CREATE TABLE join_code (
+CREATE TABLE IF NOT EXISTS join_code (
   id text PRIMARY KEY,
   school_id text NOT NULL REFERENCES school (id),
   code text NOT NULL UNIQUE,
@@ -76,14 +79,14 @@ CREATE TABLE join_code (
   issued_by text NOT NULL REFERENCES membership (id)
 );
 
-CREATE TABLE staff_code (
+CREATE TABLE IF NOT EXISTS staff_code (
   id text PRIMARY KEY,
   school_id text NOT NULL UNIQUE REFERENCES school (id),
   code text NOT NULL UNIQUE,
   refreshed_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE content_release (
+CREATE TABLE IF NOT EXISTS content_release (
   id text PRIMARY KEY,
   locale text NOT NULL CHECK (locale IN ('en', 'af', 'xh')),
   content_hash text NOT NULL,
@@ -91,7 +94,7 @@ CREATE TABLE content_release (
   note text NOT NULL DEFAULT ''
 );
 
-CREATE TABLE module_progress (
+CREATE TABLE IF NOT EXISTS module_progress (
   user_id text NOT NULL REFERENCES person (id),
   module_id text NOT NULL,
   visited boolean NOT NULL DEFAULT false,
@@ -103,7 +106,7 @@ CREATE TABLE module_progress (
   PRIMARY KEY (user_id, module_id)
 );
 
-CREATE TABLE quiz_attempt (
+CREATE TABLE IF NOT EXISTS quiz_attempt (
   id text PRIMARY KEY,
   user_id text NOT NULL REFERENCES person (id),
   module_id text NOT NULL,
@@ -117,7 +120,7 @@ CREATE TABLE quiz_attempt (
   client_id text UNIQUE
 );
 
-CREATE TABLE certificate (
+CREATE TABLE IF NOT EXISTS certificate (
   id text PRIMARY KEY,
   user_id text NOT NULL UNIQUE REFERENCES person (id),
   school_id text NOT NULL REFERENCES school (id),
@@ -128,7 +131,7 @@ CREATE TABLE certificate (
   disclaimer text NOT NULL
 );
 
-CREATE TABLE checklist_snapshot (
+CREATE TABLE IF NOT EXISTS checklist_snapshot (
   id text PRIMARY KEY,
   school_id text NOT NULL REFERENCES school (id),
   checklist_id text NOT NULL,
@@ -141,7 +144,7 @@ CREATE TABLE checklist_snapshot (
   client_id text UNIQUE
 );
 
-CREATE TABLE daily_feeding_stat (
+CREATE TABLE IF NOT EXISTS daily_feeding_stat (
   id text PRIMARY KEY,
   school_id text NOT NULL REFERENCES school (id),
   feeding_date date NOT NULL,
@@ -160,7 +163,7 @@ CREATE TABLE daily_feeding_stat (
   CHECK (replaces_id IS NULL OR length(btrim(correction_reason)) > 0)
 );
 
-CREATE TABLE monthly_pack (
+CREATE TABLE IF NOT EXISTS monthly_pack (
   id text PRIMARY KEY,
   school_id text NOT NULL REFERENCES school (id),
   period text NOT NULL,
@@ -176,7 +179,7 @@ CREATE TABLE monthly_pack (
   CHECK (replaces_id IS NULL OR length(btrim(correction_reason)) > 0)
 );
 
-CREATE TABLE issue_report (
+CREATE TABLE IF NOT EXISTS issue_report (
   id text PRIMARY KEY,
   school_id text NOT NULL REFERENCES school (id),
   created_by text NOT NULL REFERENCES membership (id),
@@ -191,7 +194,7 @@ CREATE TABLE issue_report (
   client_id text UNIQUE
 );
 
-CREATE TABLE audit_event (
+CREATE TABLE IF NOT EXISTS audit_event (
   id text PRIMARY KEY,
   at timestamptz NOT NULL DEFAULT now(),
   actor_membership_id text NOT NULL REFERENCES membership (id),
@@ -202,7 +205,7 @@ CREATE TABLE audit_event (
   reason text
 );
 
-CREATE TABLE consent_record (
+CREATE TABLE IF NOT EXISTS consent_record (
   id text PRIMARY KEY,
   user_id text REFERENCES person (id),
   cellphone text NOT NULL,
@@ -211,7 +214,7 @@ CREATE TABLE consent_record (
   purpose text NOT NULL
 );
 
-CREATE TABLE sms_code (
+CREATE TABLE IF NOT EXISTS sms_code (
   id text PRIMARY KEY,
   cellphone text NOT NULL,
   code_hash text NOT NULL,
@@ -220,7 +223,7 @@ CREATE TABLE sms_code (
   used_at timestamptz
 );
 
-CREATE TABLE phone_change (
+CREATE TABLE IF NOT EXISTS phone_change (
   id text PRIMARY KEY,
   user_id text NOT NULL REFERENCES person (id),
   new_cellphone text NOT NULL,
@@ -229,14 +232,14 @@ CREATE TABLE phone_change (
   confirmed_at timestamptz
 );
 
-CREATE TABLE device (
+CREATE TABLE IF NOT EXISTS device (
   id text PRIMARY KEY,
   school_id text REFERENCES school (id),
   last_check_in_at timestamptz,
   marked_used boolean NOT NULL DEFAULT false
 );
 
-CREATE TABLE device_pin (
+CREATE TABLE IF NOT EXISTS device_pin (
   user_id text NOT NULL REFERENCES person (id),
   device_id text NOT NULL REFERENCES device (id),
   pin_hash text NOT NULL,
@@ -244,7 +247,7 @@ CREATE TABLE device_pin (
   PRIMARY KEY (user_id, device_id)
 );
 
-CREATE TABLE session (
+CREATE TABLE IF NOT EXISTS session (
   id text PRIMARY KEY,
   user_id text NOT NULL REFERENCES person (id),
   membership_id text NOT NULL REFERENCES membership (id),
@@ -253,12 +256,12 @@ CREATE TABLE session (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX membership_school_idx ON membership (school_id);
-CREATE INDEX membership_user_idx ON membership (user_id);
-CREATE INDEX daily_stat_school_day_idx ON daily_feeding_stat (school_id, feeding_date);
-CREATE INDEX issue_school_idx ON issue_report (school_id, status);
+CREATE INDEX IF NOT EXISTS membership_school_idx ON membership (school_id);
+CREATE INDEX IF NOT EXISTS membership_user_idx ON membership (user_id);
+CREATE INDEX IF NOT EXISTS daily_stat_school_day_idx ON daily_feeding_stat (school_id, feeding_date);
+CREATE INDEX IF NOT EXISTS issue_school_idx ON issue_report (school_id, status);
 
-CREATE FUNCTION keep_best_progress() RETURNS trigger
+CREATE OR REPLACE FUNCTION keep_best_progress() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   IF OLD.passed THEN
@@ -274,11 +277,12 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS module_progress_keep_best ON module_progress;
 CREATE TRIGGER module_progress_keep_best
   BEFORE UPDATE ON module_progress
   FOR EACH ROW EXECUTE FUNCTION keep_best_progress();
 
-CREATE FUNCTION assignment_same_district() RETURNS trigger
+CREATE OR REPLACE FUNCTION assignment_same_district() RETURNS trigger
 LANGUAGE plpgsql AS $$
 BEGIN
   IF NOT EXISTS (
@@ -296,6 +300,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS official_assignment_same_district ON official_assignment;
 CREATE TRIGGER official_assignment_same_district
   BEFORE INSERT OR UPDATE ON official_assignment
   FOR EACH ROW EXECUTE FUNCTION assignment_same_district();

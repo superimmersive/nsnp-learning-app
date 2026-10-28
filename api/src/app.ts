@@ -20,6 +20,19 @@ import { HttpError } from './errors.ts'
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 const NOTICE = 'trial-placeholder-1'
+const MODULE_IDS = [
+  'what-is-nsnp',
+  'preparation-area',
+  'volunteer-food-handlers',
+  'nsnp-committee',
+  'monthly-forms',
+  'menu-and-times',
+  'feeding-with-dignity',
+  'food-safety',
+  'deliveries-and-storage',
+  'safety',
+  'daily-statistics',
+]
 
 export { HttpError }
 
@@ -74,6 +87,7 @@ async function handle(app: App, req: IncomingMessage, res: ServerResponse) {
   }
   if (req.method === 'POST' && path === '/v1/me/pin') return send(res, 200, await setPin(app, ctx, body))
   if (req.method === 'POST' && path === '/v1/me/progress') return send(res, 200, await saveProgress(app, ctx, reason, body))
+  if (req.method === 'POST' && path === '/v1/me/certificate') return send(res, 200, await issueCertificate(app, ctx, reason))
   if (req.method === 'POST' && path === '/v1/devices/check-in') return send(res, 200, await checkIn(app, ctx, reason, body))
   if (req.method === 'POST' && /^\/v1\/people\/[^/]+\/phone$/.test(path)) {
     return send(res, 200, await startPhoneChange(app, ctx, reason, path.split('/')[3] ?? '', body))
@@ -620,6 +634,40 @@ async function saveProgress(app: App, ctx: MembershipContext, reason: string | n
     }
   })
   return { ok: true }
+}
+
+async function issueCertificate(app: App, ctx: MembershipContext & { status: string }, reason: string | null) {
+  requireActive(ctx)
+  if (!ctx.schoolId) throw new HttpError(400, 'A certificate needs a school')
+  return withScope(app.db, ctx, reason, async (client) => {
+    const passed = await client.query(
+      `SELECT count(DISTINCT module_id)::int AS n FROM module_progress
+       WHERE user_id = $1 AND passed AND module_id = ANY($2)`,
+      [ctx.userId, MODULE_IDS],
+    )
+    if (Number(passed.rows[0]?.n ?? 0) < MODULE_IDS.length) {
+      throw new HttpError(400, 'Pass all 11 modules before a certificate is issued')
+    }
+    const existing = await client.query('SELECT id, verification_code FROM certificate WHERE user_id = $1', [ctx.userId])
+    if (existing.rows[0]) {
+      return { id: existing.rows[0].id, verificationCode: existing.rows[0].verification_code, alreadyIssued: true }
+    }
+    const id = randomId('cert')
+    const verificationCode = randomToken().slice(0, 8).toUpperCase()
+    await client.query(
+      `INSERT INTO certificate (id, user_id, school_id, role, content_release_id, issued_at, verification_code, disclaimer)
+       VALUES ($1, $2, $3, $4, 'release-en-2026', now(), $5, $6)`,
+      [
+        id,
+        ctx.userId,
+        ctx.schoolId,
+        ctx.role,
+        verificationCode,
+        'This is a learning record, not an official WCED certificate.',
+      ],
+    )
+    return { id, verificationCode, alreadyIssued: false }
+  })
 }
 
 async function schoolPeople(app: App, ctx: MembershipContext, reason: string | null, schoolId: string) {

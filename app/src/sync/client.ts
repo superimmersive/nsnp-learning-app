@@ -18,7 +18,12 @@ export async function apiSend(path: string, options: { method?: string; token?: 
   if (!base) throw new ApiError(0, 'No API URL is set')
   const headers: Record<string, string> = {}
   if (options.body !== undefined) headers['content-type'] = 'application/json'
-  if (options.token) headers.authorization = `Bearer ${options.token}`
+  if (options.token) {
+    headers.authorization = `Bearer ${options.token}`
+    headers['x-session-token'] = options.token
+  }
+  const anonKey = (import.meta.env as Record<string, string | undefined>).VITE_SUPABASE_ANON_KEY?.trim()
+  if (anonKey) headers.apikey = anonKey
   if (options.reason) headers['x-support-reason'] = options.reason
   let response: Response
   try {

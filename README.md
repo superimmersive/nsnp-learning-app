@@ -90,78 +90,77 @@ The icon source is `app/assets/logo.svg`. Regenerate with `npm run assets:native
 
 ## Trial API
 
-Phase 1 is a Postgres database with row-level security and a small Node API. The website and the Capacitor apps call the same API. Nothing here is deployed. GitHub Pages still serves lessons only.
+The free trial uses the Supabase project `nsnp-trial` (`ickpnerjcfpgxspvgdzo`) in **London (eu-west-2)** and can host the website on **Vercel Hobby**. Supabase has no South African region, so trial data is hosted in London. POPIA cross-border processing needs WCED's written OK before real names and cellphone numbers are stored. The schema is plain Postgres, so a dump can move it to a South African host later. An unused Azure template is kept in `infra/azure-later/`. GitHub Pages still serves lessons only and is not the trial host.
 
 The example schools are fictional (EMIS `90000001`–`90000012`). The two officials are Example Official One and Example Official Two. The super-admin is a placeholder named Devon Placeholder, with the fake number `+27000000000`.
 
-### Run locally
+### How auth and row-level security fit
 
-Postgres 16 is required. Docker Compose brings up Postgres and the API:
+Sign-in is custom: a join code, a cellphone, an SMS code, then a device PIN. The Edge Function is deployed with `verify_jwt = false` (`supabase/config.toml`), so the Supabase gateway does not treat our session token as a Supabase JWT. The function checks the token itself.
 
-```bash
-docker compose up --build
-```
+The function connects with the auto-provided service role, and that role bypasses row-level security. It does not query tables directly. It calls `public.dispatch`, a `SECURITY DEFINER` function that loads the session, sets the `nsnp.*` settings, and only reads or writes rows `nsnp.can_read_school` allows. The same policies still apply to the `nsnp_app` role, which is what local tests and any direct SQL use. A super-admin call with an empty reason is rejected and, when a reason is present, an audit row is written first.
 
-Without Docker, create the roles `nsnp_migrator` (owner) and `nsnp_app` (no superuser, no bypass of row-level security), then:
+### Apply the database
 
-```bash
-cd api
-cp .env.example .env
-npm ci
-npm run migrate
-npm run seed
-npm start
-npm test
-```
+Run these files in the Supabase SQL editor, or through the management connector, in this order. Each file stands alone.
 
-The API listens on port 8787. `GET /healthz` returns `{ "ok": true }`.
+1. `supabase/migrations/20261028100000_schema.sql`
+2. `supabase/migrations/20261028100100_rls.sql`
+3. `supabase/migrations/20261028100200_dispatch.sql`
+4. `supabase/seed.sql` (fictional schools only; not a migration)
 
-Leave `VITE_API_URL` unset to keep the clickable prototype on example data in the browser. To point the website at the API:
+### Edge Function
+
+Deploy the folder `supabase/functions/api` (`index.ts`, relative imports, `deno.json`). Supabase injects `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Set `SESSION_SECRET` in the function secrets. Do not commit those values.
+
+| Variable | Purpose |
+| --- | --- |
+| `SUPABASE_URL` | Provided on the function. Project URL. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Provided on the function. Used only inside the function to call `dispatch`. |
+| `SESSION_SECRET` | You set this. Hashes session tokens, SMS codes, and PINs. |
+| `SMS_PROVIDER` | Optional. `console` (default) logs the code. `local-sa` and `twilio` are stubs and do not send. |
+| `DEV_FIXED_OTP` | Optional. Off unless set, for example `123456`. Forces that SMS code so a test can type it. |
+
+The function URL is `https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api`.
+
+### Website
+
+Leave `VITE_API_URL` unset to keep example data in the browser. To call the function:
 
 ```bash
 cd app
-VITE_API_URL=http://127.0.0.1:8787 \
+VITE_API_URL=https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api \
+VITE_SUPABASE_ANON_KEY=the-public-anon-key \
 VITE_OFFICIAL_TOKEN=local-dev-official \
 VITE_ADMIN_TOKEN=local-dev-admin \
 npm run dev
 ```
 
-`/join` then uses join codes, SMS codes, and approvals from the API. `/officials` loads the trial list from Postgres. A feeding count entered on This phone is kept in an outbox (`nsnp-trial-outbox-v1`) until Send now reaches the API. The same client id is sent again so a retry does not create a second count.
+`app/vercel.json` rewrites unknown paths to `index.html` so `/officials` and `/join` work on Vercel Hobby. Set the Vercel project root to `app`. Add the same `VITE_*` values in the Vercel project settings. The anon key is public; it only gets the request through the Supabase gateway. The function does not treat it as a user login.
 
-Demo codes after seeding: `DRY4K2` with `082 000 0091` (Dryveld), `OLD2K4` with `082 000 0099` (expired), staff code `DRYH9K` at Dryveld and `HANDL2` at Riverbend. With `SMS_PROVIDER=console` the API response includes the one-time code and the server prints it. No real SMS is sent.
+Demo codes after the seed: `DRY4K2` with `082 000 0091`, expired `OLD2K4` with `082 000 0099`, staff codes `HANDL2` and `DRYH9K`. Feeding counts wait in `nsnp-trial-outbox-v1` until Send now. `POST /v1/me/certificate` issues one learning record after all 11 modules are passed.
 
-### Environment variables
+### Run the tests locally
 
-See `api/.env.example`. The important ones:
+Postgres 16, then:
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | Migrator connection. Owns the tables. |
-| `DATABASE_APP_URL` | API connection. Subject to row-level security. |
-| `SMS_PROVIDER` | `console` (default), `local-sa`, or `twilio`. The last two are stubs. |
-| `SMS_PEPPER`, `TOKEN_PEPPER`, `PIN_PEPPER` | Hash secrets. Local defaults are not for a shared environment. |
-| `SEED_OFFICIAL_TOKEN`, `SEED_ADMIN_TOKEN` | Fixture bearer tokens created by the seed. |
-| `VITE_API_URL` | Website build flag. Empty means the example-data prototype. |
-| `VITE_OFFICIAL_TOKEN`, `VITE_ADMIN_TOKEN` | Tokens the dashboard sends when an API URL is set. |
+```bash
+cd api
+cp .env.example .env
+npm ci
+npm test
+```
 
-Do not commit `.env`, API keys, or real cellphone numbers.
+`npm test` applies `supabase/migrations`, loads `supabase/seed.sql`, and checks row-level security, join codes, the 7-day PIN lock, certificates, and Edge Function route matching. Docker Compose still starts a local Postgres and the Node API for the same schema.
 
-### Deploy runbook
+### Free-plan limits
 
-This does not deploy anything. When Devon approves cost and an Azure subscription:
-
-1. Build `infra/main.bicep` and read the template. `az bicep build --file infra/main.bicep` checks the file without creating resources.
-2. Deploy only after a subscription and a cost approval exist, into a resource group in **South Africa North**: Postgres Flexible Server burstable **B1ms**, a Container Apps environment, and a Key Vault. Networking in the template is private.
-3. Put `DATABASE_URL`, `DATABASE_APP_URL`, and the peppers in Key Vault. Point the container at the real API image (`apiImage`). Do not leave the placeholder image.
-4. Run migrations and the school CSV import from a trusted machine. Do not load the fictional seed into production.
-5. Set `SMS_PROVIDER` only after the gateway account exists. Until then the API must not be given real numbers.
-6. The website build that talks to the API is separate from GitHub Pages. Pages stays lesson-only.
+The Supabase free plan pauses the project after about a week without activity, stores 500 MB, and caps Edge Function invocations. A weekly request to `GET /functions/v1/api/healthz` is enough to keep it awake. Do not put real personal information in this project until WCED has agreed in writing.
 
 ### What Devon still needs to supply
 
-- Which SMS account to use (a local South African gateway or Twilio), and who pays for the messages.
-- An Azure subscription and a yes on the South Africa North cost (Postgres B1ms plus a small container).
-- The real Eden and Central Karoo school CSV (`school_number`, `name`, and, when available, `phase`, `quintile`, `enrolment`). Rows for any other district are rejected.
-- The two officials' names and cellphone numbers, and whether they both see every trial school.
-- The privacy notice contact (WCED information officer) and whether trial records are kept or deleted.
-- A container registry and the first API image tag before the Bicep deploy is real.
+- Written acceptance that trial data may sit in London, or a decision to move the dump to a South African host before real data.
+- Which SMS account to use, if any. Until then leave `SMS_PROVIDER` unset so codes are only logged.
+- The real school CSV, the two officials' names and numbers, and whether both see every school.
+- The Vercel project and the public Supabase anon key for the website build.
+- The privacy notice contact, and whether trial records are kept or deleted.

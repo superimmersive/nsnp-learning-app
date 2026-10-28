@@ -1,36 +1,80 @@
+-- Row-level security. Re-runnable: policies are dropped and created again.
+-- The Edge Function sets role nsnp_app inside a transaction so these policies apply.
+-- service_role bypasses RLS; the function must not query tables as that role.
+
+
+DO $$ BEGIN
+  CREATE ROLE nsnp_app NOLOGIN NOSUPERUSER NOBYPASSRLS;
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+DROP POLICY IF EXISTS province_read ON province;
+DROP POLICY IF EXISTS district_read ON district;
+DROP POLICY IF EXISTS school_read ON school;
+DROP POLICY IF EXISTS person_read ON person;
+DROP POLICY IF EXISTS membership_read ON membership;
+DROP POLICY IF EXISTS membership_update ON membership;
+DROP POLICY IF EXISTS assignment_read ON official_assignment;
+DROP POLICY IF EXISTS join_code_read ON join_code;
+DROP POLICY IF EXISTS join_code_insert ON join_code;
+DROP POLICY IF EXISTS join_code_update ON join_code;
+DROP POLICY IF EXISTS staff_code_read ON staff_code;
+DROP POLICY IF EXISTS staff_code_write ON staff_code;
+DROP POLICY IF EXISTS release_read ON content_release;
+DROP POLICY IF EXISTS progress_read ON module_progress;
+DROP POLICY IF EXISTS progress_insert ON module_progress;
+DROP POLICY IF EXISTS progress_update ON module_progress;
+DROP POLICY IF EXISTS attempt_read ON quiz_attempt;
+DROP POLICY IF EXISTS attempt_insert ON quiz_attempt;
+DROP POLICY IF EXISTS certificate_read ON certificate;
+DROP POLICY IF EXISTS checklist_read ON checklist_snapshot;
+DROP POLICY IF EXISTS checklist_insert ON checklist_snapshot;
+DROP POLICY IF EXISTS stat_read ON daily_feeding_stat;
+DROP POLICY IF EXISTS stat_insert ON daily_feeding_stat;
+DROP POLICY IF EXISTS pack_read ON monthly_pack;
+DROP POLICY IF EXISTS pack_insert ON monthly_pack;
+DROP POLICY IF EXISTS issue_read ON issue_report;
+DROP POLICY IF EXISTS issue_insert ON issue_report;
+DROP POLICY IF EXISTS issue_update ON issue_report;
+DROP POLICY IF EXISTS audit_read ON audit_event;
+DROP POLICY IF EXISTS audit_insert ON audit_event;
+DROP POLICY IF EXISTS consent_read ON consent_record;
+DROP POLICY IF EXISTS phone_change_read ON phone_change;
+DROP POLICY IF EXISTS device_all ON device;
+
 -- Row-level security for the trial access table.
 -- nsnp_migrator owns the tables and bypasses RLS. The API uses nsnp_app.
 
 CREATE SCHEMA IF NOT EXISTS nsnp;
 
-CREATE FUNCTION nsnp.user_id() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.user_id() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.user_id', true), '') $$;
 
-CREATE FUNCTION nsnp.membership_id() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.membership_id() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.membership_id', true), '') $$;
 
-CREATE FUNCTION nsnp.role() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.role() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.role', true), '') $$;
 
-CREATE FUNCTION nsnp.scope() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.scope() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.scope', true), '') $$;
 
-CREATE FUNCTION nsnp.school_id() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.school_id() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.school_id', true), '') $$;
 
-CREATE FUNCTION nsnp.district_id() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.district_id() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.district_id', true), '') $$;
 
-CREATE FUNCTION nsnp.province_id() RETURNS text
+CREATE OR REPLACE FUNCTION nsnp.province_id() RETURNS text
 LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('nsnp.province_id', true), '') $$;
 
-CREATE FUNCTION nsnp.has_support_reason() RETURNS boolean
+CREATE OR REPLACE FUNCTION nsnp.has_support_reason() RETURNS boolean
 LANGUAGE sql STABLE AS $$
   SELECT length(btrim(coalesce(current_setting('nsnp.support_reason', true), ''))) > 0
 $$;
 
 -- Reads school and official_assignment as the table owner so policies do not recurse.
-CREATE FUNCTION nsnp.can_read_school(target text) RETURNS boolean
+CREATE OR REPLACE FUNCTION nsnp.can_read_school(target text) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, nsnp AS $$
   SELECT CASE nsnp.scope()
     WHEN 'school' THEN target IS NOT NULL AND target = nsnp.school_id()
@@ -62,7 +106,7 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, nsnp AS $$
   END
 $$;
 
-CREATE FUNCTION nsnp.can_see_person(target text) RETURNS boolean
+CREATE OR REPLACE FUNCTION nsnp.can_see_person(target text) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, nsnp AS $$
   SELECT
     (
@@ -206,6 +250,10 @@ CREATE POLICY attempt_read ON quiz_attempt FOR SELECT TO nsnp_app
 
 CREATE POLICY attempt_insert ON quiz_attempt FOR INSERT TO nsnp_app
   WITH CHECK (user_id = nsnp.user_id());
+
+DROP POLICY IF EXISTS certificate_insert ON certificate;
+CREATE POLICY certificate_insert ON certificate FOR INSERT TO nsnp_app
+  WITH CHECK (user_id = nsnp.user_id() AND school_id IS NOT DISTINCT FROM nsnp.school_id());
 
 CREATE POLICY certificate_read ON certificate FOR SELECT TO nsnp_app
   USING (

@@ -167,6 +167,62 @@ describe('join and sign-in', () => {
     assert.equal(bad.status, 400)
     const good = await post(base, '/v1/devices/device-plat/switch', { userId: session.json.userId, pin: '2580' })
     assert.equal(good.status, 200)
+
+    const pg = (await import('pg')).default
+    const pool = new pg.Pool({
+      connectionString: process.env.DATABASE_URL ?? 'postgres://nsnp_migrator:nsnp_migrator@127.0.0.1:5432/nsnp_test',
+    })
+    await pool.query(`UPDATE device SET last_check_in_at = now() - interval '8 days' WHERE id = 'device-plat'`)
+    await pool.end()
+    const locked = await post(base, '/v1/devices/device-plat/switch', { userId: session.json.userId, pin: '2580' })
+    assert.equal(locked.status, 403)
+    assert.match(String(locked.json.error), /signal/)
+  })
+
+  it('issues one certificate after all 11 modules are passed', async () => {
+    const issued = await post(
+      base,
+      '/v1/join-codes',
+      { schoolId: 'school-90000003', cellphone: '0820000031', intendedRole: 'nsnp_coordinator', code: 'GANN9K' },
+      'local-dev-official',
+    )
+    assert.equal(issued.status, 200)
+    const claim = await post(base, '/v1/join/coordinator', {
+      code: 'GANN9K',
+      firstName: 'Piet',
+      surname: 'Example',
+      cellphone: '0820000031',
+      consent: true,
+    })
+    const session = await post(base, '/v1/auth/sms/verify', {
+      cellphone: '0820000031',
+      code: claim.json.demoCode,
+      purpose: 'join',
+    })
+    const token = String(session.json.token)
+    const modules = [
+      'what-is-nsnp',
+      'preparation-area',
+      'volunteer-food-handlers',
+      'nsnp-committee',
+      'monthly-forms',
+      'menu-and-times',
+      'feeding-with-dignity',
+      'food-safety',
+      'deliveries-and-storage',
+      'safety',
+      'daily-statistics',
+    ].map((moduleId) => ({ moduleId, correct: 4, total: 5, passed: true }))
+    const early = await post(base, '/v1/me/certificate', {}, token)
+    assert.equal(early.status, 400)
+    const saved = await post(base, '/v1/me/progress', { modules }, token)
+    assert.equal(saved.status, 200)
+    const certificate = await post(base, '/v1/me/certificate', {}, token)
+    assert.equal(certificate.status, 200)
+    assert.equal(typeof certificate.json.verificationCode, 'string')
+    const again = await post(base, '/v1/me/certificate', {}, token)
+    assert.equal(again.json.alreadyIssued, true)
+    assert.equal(again.json.id, certificate.json.id)
   })
 
   it('shows the trial list to an official and requires a reason for the super-admin', async () => {

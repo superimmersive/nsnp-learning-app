@@ -7,7 +7,7 @@ import { loadConfig } from './config.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 
-export async function migrate(owner: pg.Pool, directory = path.join(here, '../migrations')): Promise<string[]> {
+export async function migrate(owner: pg.Pool, directory = path.join(here, '../../supabase/migrations')): Promise<string[]> {
   await owner.query(`
     CREATE TABLE IF NOT EXISTS schema_migrations (
       id text PRIMARY KEY,
