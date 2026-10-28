@@ -9,6 +9,12 @@ describe('edge function routes', () => {
       '/v1/join/coordinator',
     )
     assert.equal(normalizePath('http://localhost/healthz'), '/healthz')
+    assert.equal(
+      normalizePath('https://ickpnerjcfpgxspvgdzo.supabase.co/api/v1/join/coordinator'),
+      '/v1/join/coordinator',
+    )
+    assert.equal(normalizePath('http://localhost/api/healthz'), '/healthz')
+    assert.equal(normalizePath('http://localhost/api'), '/')
   })
 
   it('maps the trial routes the website calls', () => {

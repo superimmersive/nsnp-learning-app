@@ -10,7 +10,9 @@ export function normalizePath(url: string): string {
   const path = new URL(url).pathname
   const marker = "/functions/v1/api"
   const start = path.indexOf(marker)
-  const rest = start >= 0 ? path.slice(start + marker.length) : path
+  let rest = start >= 0 ? path.slice(start + marker.length) : path
+  // Hosted Edge Functions see the path as `/api/...` (function name first).
+  if (start < 0 && (rest === "/api" || rest.startsWith("/api/"))) rest = rest.slice("/api".length)
   const trimmed = rest.replace(/\/$/, "")
   return trimmed.length > 0 ? trimmed : "/"
 }

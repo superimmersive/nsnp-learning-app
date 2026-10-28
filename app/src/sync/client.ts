@@ -1,6 +1,6 @@
 import type { OfficialsSnapshot, ViewerRole } from '@/officials/types'
 import type { OfficialsAction } from '@/officials/actions'
-import { apiBase, officialToken } from './config'
+import { apiBase } from './config'
 
 export class ApiError extends Error {
   status: number
@@ -45,16 +45,15 @@ export async function apiSend(path: string, options: { method?: string; token?: 
   return json
 }
 
-export async function fetchOfficialSnapshot(role: ViewerRole, reason: string): Promise<OfficialsSnapshot> {
+export async function fetchOfficialSnapshot(token: string, role: ViewerRole, reason: string): Promise<OfficialsSnapshot> {
   const json = await apiSend('/v1/officials/snapshot', {
-    token: officialToken(role),
+    token,
     reason: role === 'super_admin' ? reason : undefined,
   })
   return json as OfficialsSnapshot
 }
 
-export async function sendOfficialAction(role: ViewerRole, action: OfficialsAction, reason: string) {
-  const token = officialToken(role)
+export async function sendOfficialAction(token: string, role: ViewerRole, action: OfficialsAction, reason: string) {
   const support = role === 'super_admin' ? reason : undefined
   switch (action.type) {
     case 'mark_seen':

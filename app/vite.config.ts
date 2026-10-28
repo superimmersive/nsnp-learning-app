@@ -130,6 +130,11 @@ export default defineConfig(({ mode }) => ({
   },
   test: {
     environment: 'node',
+    // Example-data tests stay in mock mode even if the machine has an API URL.
+    env: {
+      VITE_API_URL: '',
+      VITE_SUPABASE_ANON_KEY: '',
+    },
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
   },
 }))

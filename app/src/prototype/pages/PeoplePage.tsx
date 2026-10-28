@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { peopleAtSchool, roleLabel } from '@/officials/metrics'
 import { fieldClass } from '@/officials/present'
 import { apiSend } from '@/sync/client'
-import { apiBase, officialToken } from '@/sync/config'
+import { apiBase } from '@/sync/config'
 import { nowIso } from '../access'
 import { approverFor, decideMembership, refreshStaffCode } from '../join'
 import { usePrototype } from '../store'
@@ -21,7 +21,7 @@ export function PeoplePage() {
   const school = snapshot.schools.find((item) => item.id === schoolId)
 
   function decide(membershipId: string, decision: 'active' | 'removed') {
-    const token = phone.apiToken || officialToken('district_official')
+    const token = phone.apiToken
     if (apiBase() && token) {
       void apiSend(`/v1/memberships/${membershipId}/decision`, { token, body: { decision } })
         .then(() => apiSend(`/v1/schools/${schoolId}/people`, { token }))

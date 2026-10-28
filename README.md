@@ -109,7 +109,9 @@ Run these files in the Supabase SQL editor, or through the management connector,
 3. `supabase/migrations/20261028100200_dispatch.sql`
 4. `supabase/migrations/20261028100300_dispatch_ops.sql` (replaces `dispatch` with monthly packs, count corrections, issue close, number change, and device check-in)
 5. `supabase/migrations/20261028100400_vault_and_config.sql` (Vault pepper and private settings)
-6. `supabase/seed.sql` (fictional schools only; not a migration)
+6. `supabase/migrations/20261028100500_revoke_dispatch_from_api_roles.sql` (stop anon and authenticated calling `dispatch` and `session_secret`)
+7. `supabase/migrations/20261028100600_advisor.sql` (search_path, foreign-key indexes, one staff-code select policy)
+8. `supabase/seed.sql` (fictional schools only; not a migration)
 
 ### Edge Function
 
@@ -141,12 +143,10 @@ Leave `VITE_API_URL` unset to keep example data in the browser. To call the func
 cd app
 VITE_API_URL=https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api \
 VITE_SUPABASE_ANON_KEY=the-public-anon-key \
-VITE_OFFICIAL_TOKEN=local-dev-official \
-VITE_ADMIN_TOKEN=local-dev-admin \
 npm run dev
 ```
 
-`app/vercel.json` rewrites unknown paths to `index.html` so `/officials` and `/join` work on Vercel Hobby. Set the Vercel project root to `app`. Add the same `VITE_*` values in the Vercel project settings. The anon key is public; it only gets the request through the Supabase gateway. The function does not treat it as a user login.
+`/officials` asks for a cellphone, the SMS code, then a PIN on this device. The dashboard nav is shown for a `district_official` or `super_admin` session. There is no baked official token. `app/vercel.json` rewrites unknown paths to `index.html` so `/officials` and `/join` work on Vercel Hobby. Set the Vercel project root to `app`. Add the same `VITE_*` values in the Vercel project settings. The anon key is public; it only gets the request through the Supabase gateway. The function does not treat it as a user login.
 
 Demo codes after the seed: `DRY4K2` with `082 000 0091`, expired `OLD2K4` with `082 000 0099`, staff codes `HANDL2` and `DRYH9K`. Feeding counts wait in `nsnp-trial-outbox-v1` until Send now. `POST /v1/me/certificate` issues one learning record after all 11 modules are passed.
 

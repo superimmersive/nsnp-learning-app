@@ -3,6 +3,13 @@ import { loadTrialSnapshot, prototypeStorage, saveTrialSnapshot } from '@/protot
 import { apiBase } from '@/sync/config'
 import { fetchOfficialSnapshot, sendOfficialAction } from '@/sync/client'
 import { reduceOfficials, type OfficialsAction } from './actions'
+import {
+  clearOfficialSession,
+  isDashboardRole,
+  loadOfficialSession,
+  saveOfficialSession,
+  type OfficialSession,
+} from './session'
 import type { OfficialsSnapshot, ViewerRole } from './types'
 
 type ActionInput = {
@@ -18,6 +25,10 @@ type OfficialsController = {
   setViewingAs: (role: ViewerRole) => void
   dispatch: (action: ActionInput) => void
   remote: boolean
+  live: boolean
+  session: OfficialSession | null
+  signIn: (session: OfficialSession) => void
+  signOut: () => void
   supportReason: string
   setSupportReason: (reason: string) => void
   remoteError: string | null
@@ -29,18 +40,26 @@ export function OfficialsProvider({ children }: { children: ReactNode }) {
   const storage = prototypeStorage()
   const remote = apiBase() != null
   const [snapshot, setSnapshot] = useState(() => loadTrialSnapshot(storage))
-  const [viewingAs, setViewingAs] = useState<ViewerRole>('district_official')
+  const [viewingAsState, setViewingAs] = useState<ViewerRole>('district_official')
+  const [session, setSession] = useState<OfficialSession | null>(() => loadOfficialSession(storage))
+  const [live, setLive] = useState(false)
   const [supportReason, setSupportReason] = useState('')
   const [remoteError, setRemoteError] = useState<string | null>(null)
+  const viewingAs: ViewerRole = remote
+    ? session?.role === 'super_admin'
+      ? 'super_admin'
+      : 'district_official'
+    : viewingAsState
 
   useEffect(() => {
-    if (!remote) return
+    if (!remote || !session || !isDashboardRole(session.role)) return
     if (viewingAs === 'super_admin' && !supportReason.trim()) return
     let cancelled = false
-    void fetchOfficialSnapshot(viewingAs, supportReason)
+    void fetchOfficialSnapshot(session.token, viewingAs, supportReason)
       .then((next) => {
         if (!cancelled) {
           setSnapshot(next)
+          setLive(true)
           setRemoteError(null)
         }
       })
@@ -50,16 +69,35 @@ export function OfficialsProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true
     }
-  }, [remote, viewingAs, supportReason])
+  }, [remote, session, viewingAs, supportReason])
 
   const api = useMemo<OfficialsController>(() => {
-    const actorMembershipId = viewingAs === 'super_admin' ? 'mem-admin' : 'mem-official-1'
+    const actorMembershipId = remote
+      ? (session?.membershipId ?? '')
+      : viewingAs === 'super_admin'
+        ? 'mem-admin'
+        : 'mem-official-1'
     return {
       snapshot,
       viewingAs,
       actorMembershipId,
       setViewingAs,
       remote,
+      live,
+      session,
+      signIn: (next) => {
+        saveOfficialSession(storage, next)
+        setSession(next)
+        setLive(false)
+        setRemoteError(null)
+      },
+      signOut: () => {
+        clearOfficialSession(storage)
+        setSession(null)
+        setLive(false)
+        setSupportReason('')
+        setRemoteError(null)
+      },
       supportReason,
       setSupportReason,
       remoteError,
@@ -67,12 +105,14 @@ export function OfficialsProvider({ children }: { children: ReactNode }) {
         const at = action.at ?? new Date().toISOString()
         const full = { ...action, actorMembershipId, at } as OfficialsAction
         if (remote) {
+          if (!session) return
           const reason = full.type === 'support_view' ? full.reason : supportReason
           if (full.type === 'support_view') setSupportReason(full.reason)
-          void sendOfficialAction(viewingAs, full, reason)
-            .then(() => fetchOfficialSnapshot(viewingAs, reason))
+          void sendOfficialAction(session.token, viewingAs, full, reason)
+            .then(() => fetchOfficialSnapshot(session.token, viewingAs, reason))
             .then((next) => {
               setSnapshot(next)
+              setLive(true)
               setRemoteError(null)
             })
             .catch((error: unknown) => {
@@ -87,7 +127,7 @@ export function OfficialsProvider({ children }: { children: ReactNode }) {
         })
       },
     }
-  }, [snapshot, viewingAs, storage, remote, supportReason, remoteError])
+  }, [snapshot, viewingAs, storage, remote, live, session, supportReason, remoteError])
 
   return <OfficialsContext.Provider value={api}>{children}</OfficialsContext.Provider>
 }
