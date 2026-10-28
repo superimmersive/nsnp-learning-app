@@ -311,6 +311,83 @@ BEGIN
     RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('id', payload->>'id', 'verificationCode', payload->>'verificationCode', 'alreadyIssued', false));
   END IF;
 
+  IF op = 'save_progress' THEN
+    IF ctx.status <> 'active' THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'The coordinator still needs to approve you.');
+    END IF;
+    INSERT INTO module_progress (user_id, module_id, visited, correct, total, passed, content_release_id)
+    SELECT ctx.user_id, item->>'moduleId', true, coalesce((item->>'correct')::int, 4), coalesce((item->>'total')::int, 5), true, 'release-en-2026'
+    FROM jsonb_array_elements(coalesce(payload->'modules', '[]'::jsonb)) AS item
+    WHERE coalesce(item->>'passed', '') IN ('true', 't')
+    ON CONFLICT (user_id, module_id) DO UPDATE
+      SET visited = true, correct = EXCLUDED.correct, total = EXCLUDED.total, passed = true, updated_at = now();
+    RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('ok', true, 'passed', nsnp.passed_module_count(ctx.user_id)));
+  END IF;
+
+  IF op = 'daily_stat' THEN
+    IF ctx.status <> 'active' OR ctx.role NOT IN ('nsnp_coordinator', 'principal') OR ctx.school_id IS DISTINCT FROM payload->>'schoolId' THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'The coordinator or principal sends the count');
+    END IF;
+    IF NOT nsnp.can_read_school(payload->>'schoolId') THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'This count is for another school');
+    END IF;
+    IF coalesce(payload->>'clientId', '') <> '' AND EXISTS (SELECT 1 FROM daily_feeding_stat WHERE client_id = payload->>'clientId') THEN
+      SELECT id INTO person_id FROM daily_feeding_stat WHERE client_id = payload->>'clientId';
+      RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('id', person_id, 'duplicate', true));
+    END IF;
+    INSERT INTO daily_feeding_stat (
+      id, school_id, feeding_date, menu_number, breakfast_fed, main_meal_fed, main_meal_time,
+      submitted_by, client_recorded_at, clock_plausible, client_id
+    ) VALUES (
+      payload->>'id', payload->>'schoolId', (payload->>'feedingDate')::date, NULLIF(payload->>'menuNumber', '')::int,
+      coalesce((payload->>'breakfastFed')::int, 0), coalesce((payload->>'mainMealFed')::int, 0), coalesce(payload->>'mainMealTime', ''),
+      ctx.id, coalesce(payload->>'clientRecordedAt', now()::text)::timestamptz,
+      abs(extract(epoch FROM (coalesce(payload->>'clientRecordedAt', now()::text)::timestamptz - now()))) <= 600,
+      NULLIF(payload->>'clientId', '')
+    );
+    RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('id', payload->>'id', 'duplicate', false));
+  END IF;
+
+  IF op = 'membership_decision' THEN
+    IF ctx.status <> 'active' OR ctx.role NOT IN ('nsnp_coordinator', 'principal', 'district_official', 'super_admin') THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'You cannot approve people');
+    END IF;
+    UPDATE membership
+    SET status = payload->>'decision',
+        approved_by = ctx.id,
+        ends_on = CASE WHEN payload->>'decision' = 'removed' THEN CURRENT_DATE ELSE NULL END
+    WHERE id = payload->>'id'
+      AND status = 'pending'
+      AND school_id IS NOT NULL
+      AND nsnp.can_read_school(school_id);
+    IF NOT FOUND THEN
+      RETURN jsonb_build_object('status', 404, 'error', 'That person is not waiting for approval');
+    END IF;
+    RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('ok', true));
+  END IF;
+
+  IF op = 'issue_create' THEN
+    IF ctx.status <> 'active' OR ctx.school_id IS DISTINCT FROM payload->>'schoolId' OR NOT nsnp.can_read_school(payload->>'schoolId') THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'This issue is for another school');
+    END IF;
+    INSERT INTO issue_report (id, school_id, created_by, kind, body, status, client_id)
+    VALUES (payload->>'id', payload->>'schoolId', ctx.id, coalesce(payload->>'kind', 'other'), payload->>'body', 'open', NULLIF(payload->>'clientId', ''));
+    RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('id', payload->>'id'));
+  END IF;
+
+  IF op = 'issue_code' THEN
+    IF ctx.status <> 'active' OR ctx.role NOT IN ('district_official', 'province_admin', 'super_admin') OR NOT nsnp.can_read_school(payload->>'schoolId') THEN
+      RETURN jsonb_build_object('status', 403, 'error', 'You cannot issue a code for that school');
+    END IF;
+    INSERT INTO join_code (id, school_id, code, cellphone, intended_role, expires_at, issued_by)
+    VALUES (
+      payload->>'id', payload->>'schoolId', upper(payload->>'code'), payload->>'cellphone',
+      CASE WHEN payload->>'intendedRole' = 'principal' THEN 'principal' ELSE 'nsnp_coordinator' END,
+      now() + interval '14 days', ctx.id
+    );
+    RETURN jsonb_build_object('status', 200, 'body', jsonb_build_object('id', payload->>'id', 'code', upper(payload->>'code')));
+  END IF;
+
   RETURN jsonb_build_object('status', 404, 'error', 'Not found');
 END;
 $$;

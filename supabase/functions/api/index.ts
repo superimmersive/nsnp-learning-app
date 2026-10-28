@@ -75,9 +75,25 @@ async function handle(req: Request): Promise<Response> {
     delete payload.pin
   }
 
-  if (route.name === "issue_certificate") {
-    payload.id = randomId("cert")
-    payload.verificationCode = randomToken().slice(0, 8).toUpperCase()
+  if (route.name === "issue_certificate" || route.name === "daily_stat" || route.name === "issue_create" || route.name === "issue_code") {
+    payload.id = payload.id || randomId(route.name)
+    if (route.name === "issue_certificate") payload.verificationCode = randomToken().slice(0, 8).toUpperCase()
+  }
+  if (route.name === "needs_look" || route.name === "export" || route.name === "school_detail") {
+    const snap = await call(supabase, "snapshot", sessionToken(req) ? hashSecret(sessionToken(req) ?? "", secret) : null, req.headers.get("x-support-reason"), {})
+    if (snap.status !== 200) return json(snap.status ?? 500, snap.body ?? { error: snap.error })
+    const data = snap.body as { schools?: Array<{ id: string; schoolNumber?: string; name?: string; phase?: string; active?: boolean }>; asOf?: string }
+    if (route.name === "export") {
+      const lines = ["school_number,name,phase,active", ...(data.schools ?? []).map((school) =>
+        [school.schoolNumber, school.name, school.phase ?? "", school.active ? "Yes" : "No"].join(","))]
+      return new Response(`${lines.join("\n")}\n`, { status: 200, headers: { ...cors, "content-type": "text/csv; charset=utf-8" } })
+    }
+    if (route.name === "school_detail") {
+      const school = (data.schools ?? []).find((item) => item.id === route.schoolId)
+      if (!school) return json(404, { error: "School not on the trial list" })
+      return json(200, { school })
+    }
+    return json(200, { schools: data.schools ?? [] })
   }
 
   const sendsSms = route.name === "join_coordinator" || route.name === "join_staff" || route.name === "recover" || route.name === "phone_start"
