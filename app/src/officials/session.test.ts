@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isDashboardRole, loadOfficialSession, OFFICIAL_SESSION_KEY, saveOfficialSession } from './session'
+import { isDashboardRole, loadOfficialSession, OFFICIAL_SESSION_KEY, saveOfficialSession, showOfficialsNav } from './session'
 
 function memory() {
   const data = new Map<string, string>()
@@ -21,6 +21,15 @@ describe('official session', () => {
     expect(isDashboardRole('nsnp_coordinator')).toBe(false)
     expect(isDashboardRole('food_handler')).toBe(false)
     expect(isDashboardRole(null)).toBe(false)
+  })
+
+  it('hides the officials nav until a district official or the super-admin has signed in', () => {
+    expect(showOfficialsNav(true, null)).toBe(false)
+    expect(showOfficialsNav(true, 'food_handler')).toBe(false)
+    expect(showOfficialsNav(true, 'nsnp_coordinator')).toBe(false)
+    expect(showOfficialsNav(true, 'district_official')).toBe(true)
+    expect(showOfficialsNav(true, 'super_admin')).toBe(true)
+    expect(showOfficialsNav(false, null)).toBe(true)
   })
 
   it('keeps a signed-in session and ignores a partial one', () => {

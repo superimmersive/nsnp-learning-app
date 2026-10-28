@@ -35,6 +35,8 @@ describe('app smoke', () => {
     expect(home).not.toContain('/prototype')
     expect(home).not.toContain('/join')
     expect(home).not.toContain('Example data - trial prototype')
+    expect(home).not.toContain('District home')
+    expect(home).not.toContain('Send SMS code')
   })
 
   it('opens the prototype menu and the join flow away from the lessons', () => {

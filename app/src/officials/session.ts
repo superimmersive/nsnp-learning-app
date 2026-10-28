@@ -14,6 +14,12 @@ export function isDashboardRole(role: string | null | undefined): role is 'distr
   return role === 'district_official' || role === 'super_admin'
 }
 
+/** Example data (no API URL) keeps the prototype nav. The live site waits for a signed-in official. */
+export function showOfficialsNav(remote: boolean, role: string | null | undefined): boolean {
+  if (!remote) return true
+  return isDashboardRole(role)
+}
+
 export function loadOfficialSession(storage: Pick<Storage, 'getItem'> | null = browserStorage()): OfficialSession | null {
   if (!storage) return null
   try {

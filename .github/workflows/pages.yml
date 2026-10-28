@@ -29,18 +29,28 @@ jobs:
           cache-dependency-path: app/package-lock.json
 
       - name: Configure Pages
-        id: pages
         uses: actions/configure-pages@v5
 
       - name: Install
         working-directory: app
         run: npm ci
 
+      - name: Require the public anon key
+        env:
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::error::VITE_SUPABASE_ANON_KEY is missing. Add it as a repository Actions variable (Settings → Secrets and variables → Actions → Variables). Use the public Supabase publishable key for project ickpnerjcfpgxspvgdzo. It is not a secret. The Pages build inlines it because the site is static."
+            exit 1
+          fi
+
       - name: Build
         working-directory: app
         run: npm run build
         env:
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          BASE_PATH: /nsnp-learning-app
+          VITE_API_URL: https://ickpnerjcfpgxspvgdzo.supabase.co/functions/v1/api
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

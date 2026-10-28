@@ -8,6 +8,17 @@ export function randomToken(): string {
   return randomBytes(24).toString("hex")
 }
 
+const JOIN_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+
+/** Six characters, without 0, O, 1, or I. */
+export function joinCode(): string {
+  let code = ""
+  for (let index = 0; index < 6; index += 1) {
+    code += JOIN_CODE_ALPHABET[randomInt(0, JOIN_CODE_ALPHABET.length)]
+  }
+  return code
+}
+
 export function hashSecret(value: string, pepper: string): string {
   return createHash("sha256").update(`${pepper}:${value}`).digest("hex")
 }

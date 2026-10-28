@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
 import { corsHeaders } from "./cors.ts"
-import { hashPin, hashSecret, oneTimeCode, pinProblem, randomId, randomToken, toE164, verifyPin } from "./crypto.ts"
+import { hashPin, hashSecret, joinCode, oneTimeCode, pinProblem, randomId, randomToken, toE164, verifyPin } from "./crypto.ts"
 import { matchRoute, normalizePath } from "./router.ts"
 import { configRows, resolveSessionSecret, resolveSms } from "./runtime.ts"
 import { deliverSms, revealCode, smsProviderName } from "./sms.ts"
@@ -79,6 +79,7 @@ async function handle(req: Request, origin: string | null): Promise<Response> {
     const prefix = route.name === "monthly_pack" ? "pack" : route.name === "daily_stat" ? "stat" : route.name === "issue_certificate" ? "cert" : route.name === "issue_code" ? "code" : "issue"
     payload.id = payload.id || randomId(prefix)
     if (route.name === "issue_certificate") payload.verificationCode = randomToken().slice(0, 8).toUpperCase()
+    if (route.name === "issue_code" && !String(payload.code ?? "").trim()) payload.code = joinCode()
   }
   if (route.name === "daily_correction") payload.newId = randomId("stat")
   if (route.name === "phone_start") payload.changeId = randomId("phone")

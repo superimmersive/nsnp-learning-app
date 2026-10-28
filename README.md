@@ -27,7 +27,7 @@ short modules, quizzes, checklists and printable forms.
 
 ## Android and iOS
 
-The website and the native apps are the same Vite + React code. [Capacitor 8](https://capacitorjs.com/) wraps a native build of `app/dist` in Android Studio and Xcode projects. GitHub Pages is unchanged: `.github/workflows/pages.yml` still runs `npm run build` with the Pages subpath.
+The website and the native apps are the same Vite + React code. [Capacitor 8](https://capacitorjs.com/) wraps a native build of `app/dist` in Android Studio and Xcode projects. GitHub Pages (`.github/workflows/pages.yml`) runs `npm run build` with `BASE_PATH=/nsnp-learning-app` and `VITE_API_URL` pointed at the trial function. `VITE_SUPABASE_ANON_KEY` is a repository Actions variable; the build stops with an error if it is missing. Vite inlines that public key into the static site. Native builds stay `npm run build:native` and do not call the API.
 
 Native builds use `npm run build:native` (`vite build --mode native`):
 
@@ -111,7 +111,8 @@ Run these files in the Supabase SQL editor, or through the management connector,
 5. `supabase/migrations/20261028100400_vault_and_config.sql` (Vault pepper and private settings)
 6. `supabase/migrations/20261028100500_revoke_dispatch_from_api_roles.sql` (stop anon and authenticated calling `dispatch` and `session_secret`)
 7. `supabase/migrations/20261028100600_advisor.sql` (search_path, foreign-key indexes, one staff-code select policy)
-8. `supabase/seed.sql` (fictional schools only; not a migration)
+8. `supabase/migrations/20261028100700_join_code_generate.sql` (a blank join code is generated in the database)
+9. `supabase/seed.sql` (fictional schools only; not a migration)
 
 ### Edge Function
 

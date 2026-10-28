@@ -22,7 +22,7 @@ async function dispatch(op: string, tokenHash: string | null, reason: string | n
     status: number
     error?: string
     problem?: string
-    body?: { schools?: unknown[]; id?: string; duplicate?: boolean; person?: { id?: string } }
+    body?: { schools?: unknown[]; id?: string; code?: string; duplicate?: boolean; person?: { id?: string } }
   }
 }
 
@@ -255,5 +255,19 @@ describe('edge dispatch', () => {
     assert.equal(person?.id, 'user-official-1')
     const people = await dispatch('school_people', official(), null, { schoolId: 'school-90000001' })
     assert.equal(people.status, 200)
+  })
+
+  it('issues a join code when the caller does not send one', async () => {
+    const issued = await dispatch('issue_code', official(), null, {
+      id: 'code-generated',
+      schoolId: 'school-90000001',
+      cellphone: '+27820004444',
+      intendedRole: 'nsnp_coordinator',
+    })
+    assert.equal(issued.status, 200)
+    const code = issued.body?.code ?? ''
+    assert.match(code, /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/)
+    const row = await owner.query(`SELECT code FROM join_code WHERE id = 'code-generated'`)
+    assert.equal(row.rows[0]?.code, code)
   })
 })

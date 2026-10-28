@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 import { roleLabel } from './metrics'
-import { isDashboardRole } from './session'
+import { isDashboardRole, showOfficialsNav } from './session'
 import { OfficialSignIn } from './SignIn'
 import { formatClockLabel } from './time'
 import { OfficialsProvider, useOfficials } from './store'
@@ -45,7 +45,7 @@ function OfficialsFrame() {
   } = useOfficials()
   const location = useLocation()
   const signedOfficial = remote && session != null && isDashboardRole(session.role)
-  const showNav = !remote || signedOfficial
+  const showNav = showOfficialsNav(remote, session?.role)
   const waitingForReason = signedOfficial && viewingAs === 'super_admin' && !supportReason.trim()
   const extra =
     showNav && viewingAs === 'super_admin'
