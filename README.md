@@ -87,3 +87,81 @@ xcodebuild -project App.xcodeproj -scheme App -configuration Release \
 Open `App.xcodeproj` (Swift Package Manager, not CocoaPods). Then in Xcode: Window → Organizer → Distribute App → App Store Connect → Upload. `npm run cap:open:ios` opens the same project.
 
 The icon source is `app/assets/logo.svg`. Regenerate with `npm run assets:native`. More detail is in `app/README.md`.
+
+## Trial API
+
+Phase 1 is a Postgres database with row-level security and a small Node API. The website and the Capacitor apps call the same API. Nothing here is deployed. GitHub Pages still serves lessons only.
+
+The example schools are fictional (EMIS `90000001`–`90000012`). The two officials are Example Official One and Example Official Two. The super-admin is a placeholder named Devon Placeholder, with the fake number `+27000000000`.
+
+### Run locally
+
+Postgres 16 is required. Docker Compose brings up Postgres and the API:
+
+```bash
+docker compose up --build
+```
+
+Without Docker, create the roles `nsnp_migrator` (owner) and `nsnp_app` (no superuser, no bypass of row-level security), then:
+
+```bash
+cd api
+cp .env.example .env
+npm ci
+npm run migrate
+npm run seed
+npm start
+npm test
+```
+
+The API listens on port 8787. `GET /healthz` returns `{ "ok": true }`.
+
+Leave `VITE_API_URL` unset to keep the clickable prototype on example data in the browser. To point the website at the API:
+
+```bash
+cd app
+VITE_API_URL=http://127.0.0.1:8787 \
+VITE_OFFICIAL_TOKEN=local-dev-official \
+VITE_ADMIN_TOKEN=local-dev-admin \
+npm run dev
+```
+
+`/join` then uses join codes, SMS codes, and approvals from the API. `/officials` loads the trial list from Postgres. A feeding count entered on This phone is kept in an outbox (`nsnp-trial-outbox-v1`) until Send now reaches the API. The same client id is sent again so a retry does not create a second count.
+
+Demo codes after seeding: `DRY4K2` with `082 000 0091` (Dryveld), `OLD2K4` with `082 000 0099` (expired), staff code `DRYH9K` at Dryveld and `HANDL2` at Riverbend. With `SMS_PROVIDER=console` the API response includes the one-time code and the server prints it. No real SMS is sent.
+
+### Environment variables
+
+See `api/.env.example`. The important ones:
+
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Migrator connection. Owns the tables. |
+| `DATABASE_APP_URL` | API connection. Subject to row-level security. |
+| `SMS_PROVIDER` | `console` (default), `local-sa`, or `twilio`. The last two are stubs. |
+| `SMS_PEPPER`, `TOKEN_PEPPER`, `PIN_PEPPER` | Hash secrets. Local defaults are not for a shared environment. |
+| `SEED_OFFICIAL_TOKEN`, `SEED_ADMIN_TOKEN` | Fixture bearer tokens created by the seed. |
+| `VITE_API_URL` | Website build flag. Empty means the example-data prototype. |
+| `VITE_OFFICIAL_TOKEN`, `VITE_ADMIN_TOKEN` | Tokens the dashboard sends when an API URL is set. |
+
+Do not commit `.env`, API keys, or real cellphone numbers.
+
+### Deploy runbook
+
+This does not deploy anything. When Devon approves cost and an Azure subscription:
+
+1. Build `infra/main.bicep` and read the template. `az bicep build --file infra/main.bicep` checks the file without creating resources.
+2. Deploy only after a subscription and a cost approval exist, into a resource group in **South Africa North**: Postgres Flexible Server burstable **B1ms**, a Container Apps environment, and a Key Vault. Networking in the template is private.
+3. Put `DATABASE_URL`, `DATABASE_APP_URL`, and the peppers in Key Vault. Point the container at the real API image (`apiImage`). Do not leave the placeholder image.
+4. Run migrations and the school CSV import from a trusted machine. Do not load the fictional seed into production.
+5. Set `SMS_PROVIDER` only after the gateway account exists. Until then the API must not be given real numbers.
+6. The website build that talks to the API is separate from GitHub Pages. Pages stays lesson-only.
+
+### What Devon still needs to supply
+
+- Which SMS account to use (a local South African gateway or Twilio), and who pays for the messages.
+- An Azure subscription and a yes on the South Africa North cost (Postgres B1ms plus a small container).
+- The real Eden and Central Karoo school CSV (`school_number`, `name`, and, when available, `phase`, `quintile`, `enrolment`). Rows for any other district are rejected.
+- The two officials' names and cellphone numbers, and whether they both see every trial school.
+- The privacy notice contact (WCED information officer) and whether trial records are kept or deleted.
+- A container registry and the first API image tag before the Bicep deploy is real.
