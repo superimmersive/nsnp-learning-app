@@ -2,7 +2,7 @@
 
 App: **NSNP Learning**, package `za.co.superimmersive.nsnp`, Play app id `4973108586448023958`.
 
-The dashboard tasks below are not done yet. Paste these answers. They describe the **store build** (lessons only, no login). They do not describe the website trial. If a later Play version adds accounts, replace Data safety, App access, and the privacy policy before that upload.
+The dashboard tasks below are not done yet. **Target audience** and **Data safety** stay blocked until **App access** is saved. Do that one first. Paste these answers. They describe the **store build** (lessons only, no login). They do not describe the website trial. If a later Play version adds accounts, replace Data safety, App access, and the privacy policy before that upload.
 
 Developer account to confirm in the console: **SUPERIMMERSIVE ART (PTY) LTD**. That name is the account, not a line in the public description.
 
@@ -121,6 +121,8 @@ Upload:
 - `store/graphics/play-icon-512.png`
 - `store/graphics/play-feature-1024x500.png`
 - the PNGs in `store/screenshots/play-phone/`
+
+Play asks which store assets were made with AI. These phone screenshots are captures of the running lesson UI. The 512 icon is a render of `app/assets/logo.svg`. The feature graphic is that logo plus one of those screenshots. The lesson pictures visible inside the screenshots are the illustrations already shipped in the app.
 
 No ads declaration beyond the Ads task above. No news app. Not a COVID-19 contact-tracing or status app. If those extra declarations are on the dashboard, answer **No** to both.
 

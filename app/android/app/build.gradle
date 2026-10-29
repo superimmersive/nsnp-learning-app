@@ -6,27 +6,11 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def propOrNull = { String key ->
-    def value = keystoreProperties.getProperty(key)
-    return value?.trim() ? value.trim() : null
-}
-
-// keystore.properties is how the Mac signs. Env vars are only the fallback (CI).
-def releaseStoreFile
-def releaseStorePassword
-def releaseKeyAlias
-def releaseKeyPassword
-if (propOrNull("storeFile")) {
-    releaseStoreFile = propOrNull("storeFile")
-    releaseStorePassword = propOrNull("storePassword")
-    releaseKeyAlias = propOrNull("keyAlias")
-    releaseKeyPassword = propOrNull("keyPassword")
-} else {
-    releaseStoreFile = System.getenv("NSNP_STORE_FILE")?.trim() ?: null
-    releaseStorePassword = System.getenv("NSNP_STORE_PASSWORD")
-    releaseKeyAlias = System.getenv("NSNP_KEY_ALIAS")?.trim() ?: null
-    releaseKeyPassword = System.getenv("NSNP_KEY_PASSWORD")
-}
+// Same lookup as the 18 Oct bundle: NSNP_* env vars, otherwise keystore.properties.
+def releaseStoreFile = System.getenv("NSNP_STORE_FILE") ?: keystoreProperties.getProperty("storeFile")
+def releaseStorePassword = System.getenv("NSNP_STORE_PASSWORD") ?: keystoreProperties.getProperty("storePassword")
+def releaseKeyAlias = System.getenv("NSNP_KEY_ALIAS") ?: keystoreProperties.getProperty("keyAlias")
+def releaseKeyPassword = System.getenv("NSNP_KEY_PASSWORD") ?: keystoreProperties.getProperty("keyPassword")
 
 // VersionCode 1 on Play was signed with this certificate. Do not accept another.
 def expectedUploadSha1 = "69:D4:67:3D:AA:1B:F6:71:C5:A1:E7:65:FE:FA:D5:B7:B8:BA:9E:CA"

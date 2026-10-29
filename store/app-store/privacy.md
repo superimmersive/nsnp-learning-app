@@ -25,7 +25,7 @@ If a later store build adds the website trial (name, cellphone, school role sent
 - no collected data types
 - no required-reason API entries in the app target
 
-The app target’s Swift files do not call UserDefaults, disk-space, or boot-time APIs. Capacitor’s own manifest travels with the Swift package. Check the Organizer privacy report on the build 2 archive. If that report lists a required-reason API the app target uses, add that reason then. Do not add reasons the app does not use.
+The app target’s Swift files do not call UserDefaults, disk-space, or boot-time APIs. Capacitor’s own manifest travels with the Swift package. Check the Organizer privacy report on the build 3 archive. If that report lists a required-reason API the app target uses, add that reason then. Do not add reasons the app does not use.
 
 ## Encryption
 

@@ -35,7 +35,7 @@ Native builds use `npm run build:native` (`vite build --mode native`):
 - Hash routes (`/#/module/...`) so lessons open offline from files packed in the app. The website keeps normal URLs.
 - No service worker in the apps. Every lesson and illustration is in the binary.
 
-Display name **NSNP Learning**. iOS bundle id and Android `applicationId` are `za.co.superimmersive.nsnp`. User-facing version **1.0.0**. The next store upload is iOS build **2** and Android `versionCode` **2**. Build 1 of each is already on TestFlight and Play internal testing. Do not create a new upload keystore. The hand steps and the assumptions behind them are in `store/RELEASE.md`.
+Display name **NSNP Learning**. iOS bundle id and Android `applicationId` are `za.co.superimmersive.nsnp`. User-facing version **1.0.0**. The next store upload is iOS build **3** and Android `versionCode` **2**. iOS builds 1 and 2 were uploaded on 18 Oct. Play internal testing already has versionCode 1. Do not create a new upload keystore. Hand steps are in `store/RELEASE.md`.
 
 From `app/` (Node.js 22+, JDK 21; iOS needs a Mac with Xcode):
 
@@ -48,25 +48,18 @@ npm run cap:sync
 
 ### Signed Android App Bundle
 
-Copy `app/android/keystore.properties.example` to `app/android/keystore.properties` and fill the passwords for the existing key at `/Users/devonk/keys/nsnp-upload.keystore`, alias `nsnp`. Then, with JDK 21:
+The 18 Oct command signs with `NSNP_STORE_FILE`, `NSNP_STORE_PASSWORD`, `NSNP_KEY_ALIAS`, and `NSNP_KEY_PASSWORD`. If those are unset, Gradle reads `android/keystore.properties` (`storeFile`, `storePassword`, `keyAlias`, `keyPassword`). The key is `/Users/devonk/keys/nsnp-upload.keystore`, alias `nsnp`. JDK 21:
 
 ```bash
 cd app
 npm run android:aab
 ```
 
-That runs `build:native`, syncs into the existing Android project, and runs `bundleRelease`. Gradle refuses a key whose SHA-1 is not `69:D4:67:3D:AA:1B:F6:71:C5:A1:E7:65:FE:FA:D5:B7:B8:BA:9E:CA`. Without `keystore.properties`, the same command builds an unsigned AAB, which Play will not accept.
+That runs `build:native`, syncs into the existing Android project, and runs `bundleRelease`. Gradle refuses a key whose SHA-1 is not `69:D4:67:3D:AA:1B:F6:71:C5:A1:E7:65:FE:FA:D5:B7:B8:BA:9E:CA`. Without the env vars or `keystore.properties`, the same command builds an unsigned AAB, which Play will not accept.
 
 ### iOS archive for TestFlight
 
-The existing Xcode project is `app/ios/App/App.xcodeproj` (Swift packages, not CocoaPods). Team `U5DGDWXQCP`, automatic signing, marketing version 1.0.0, build 2. The scene delegate is already in the project. On the Mac, from `app/ios`:
-
-```bash
-bundle install
-bundle exec fastlane beta
-```
-
-`ASC_KEY_ID`, `ASC_ISSUER_ID`, and `ASC_KEY_PATH` or `ASC_KEY_CONTENT` must be set. Do not commit the `.p8` file. Details are in `store/RELEASE.md`.
+The existing Xcode project is `app/ios/App/App.xcodeproj` (Swift packages, not CocoaPods). Team `U5DGDWXQCP`, automatic signing, marketing version 1.0.0, build 3. The scene delegate is already in the project. Archive and upload with `xcodebuild` and `~/builds/nsnp/ExportOptions.plist`, the same way as 18 Oct. The App Store Connect app record is gone and has to be restored or recreated first. Commands are in `store/RELEASE.md`.
 
 ## Trial API
 

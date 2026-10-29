@@ -56,7 +56,7 @@ The native apps are the same Vite project inside a [Capacitor 8](https://capacit
 | iOS bundle id and Android applicationId | `za.co.superimmersive.nsnp` |
 | Version | 1.0.0 |
 | Next Android `versionCode` | 2 (1 is already on Play internal testing) |
-| Next iOS build | 2 (1.0.0 (1) is already on internal TestFlight) |
+| Next iOS build | 3 (1.0.0 builds 1 and 2 were uploaded on 18 Oct) |
 
 The native projects already live in `android/` and `ios/`. Do not recreate them. `npm run cap:sync` rebuilds the web bundle and copies it in. Those copies are gitignored, so run sync before every native build. Node.js 22 or newer and JDK 21 are required. iOS archives need a Mac with Xcode. No keystore, certificate, or API key belongs in this repo. Hand steps are in `../store/RELEASE.md`.
 
@@ -69,7 +69,7 @@ npm run cap:sync
 
 ### Signed Android App Bundle
 
-Use the existing upload key. Do not run `keytool -genkeypair`. Copy `android/keystore.properties.example` to `android/keystore.properties` (gitignored) and set the passwords. `storeFile` is `/Users/devonk/keys/nsnp-upload.keystore` and `keyAlias` is `nsnp`. If that file is absent, Gradle falls back to `NSNP_STORE_FILE`, `NSNP_STORE_PASSWORD`, `NSNP_KEY_ALIAS`, and `NSNP_KEY_PASSWORD`.
+Use the existing upload key. Do not run `keytool -genkeypair`. Set `NSNP_STORE_FILE`, `NSNP_STORE_PASSWORD`, `NSNP_KEY_ALIAS`, and `NSNP_KEY_PASSWORD`, or copy `android/keystore.properties.example` to `android/keystore.properties` (gitignored). The env vars win when both are set. `storeFile` is `/Users/devonk/keys/nsnp-upload.keystore` and `keyAlias` is `nsnp`.
 
 ```bash
 npm run android:aab
@@ -79,15 +79,11 @@ The bundle is `android/app/build/outputs/bundle/release/app-release.aab`, versio
 
 ### iOS archive for TestFlight
 
-The bundle id `za.co.superimmersive.nsnp` is the existing App Store Connect app **NSNP Learning**. Build 1.0.0 (1) is already on internal TestFlight, so the project is now build 2. Team `U5DGDWXQCP` is set on the target with automatic signing. Do not create a second Xcode project.
+The bundle id `za.co.superimmersive.nsnp` is still registered. Builds 1.0.0 (1) and (2) were uploaded on 18 Oct, so the project is now build 3. The App Store Connect app record itself is gone. Restore it from Removed Apps, or recreate it, before uploading. Team `U5DGDWXQCP`, automatic signing. Do not create a second Xcode project.
 
-```bash
-cd ios
-bundle install
-bundle exec fastlane beta
-```
+Archive from `ios/App` with `xcodebuild`, then upload with `xcodebuild -exportArchive` and `~/builds/nsnp/ExportOptions.plist`. That is the 18 Oct flow. The commands are in `../store/RELEASE.md`.
 
-Open `App.xcodeproj` (Swift packages, so there is no CocoaPods workspace). `npm run cap:open:ios` opens that project. Product → Archive uses the same scheme. The scene delegate and privacy manifest are already in the app target. See `../store/RELEASE.md`.
+Open `App.xcodeproj` (Swift packages, so there is no CocoaPods workspace). `npm run cap:open:ios` opens that project. The scene delegate is already there. `PrivacyInfo.xcprivacy` is in the app target.
 
 ### Icon and splash
 

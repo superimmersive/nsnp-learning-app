@@ -1,6 +1,6 @@
 # App Store listing — NSNP Learning
 
-The record already exists. Apple ID `6824168888`, bundle id `za.co.superimmersive.nsnp`, SKU `nsnp-learning-ios`. Do not create another app.
+The app record (Apple ID `6824168888`, SKU `nsnp-learning-ios`) is gone. The bundle id `za.co.superimmersive.nsnp` is still registered. Restore the app from Removed Apps, or recreate it, before pasting this listing. Do not register a second bundle id. See `store/RELEASE.md`. Do not accept Apple agreements while you do that.
 
 The seller on the account is still an individual account. Do not write a company name into this listing while that conversion is pending. The words below do not name a seller.
 
@@ -82,4 +82,4 @@ Encryption: the app uses only exempt encryption, already declared with `ITSAppUs
 
 ## Build
 
-Attach **1.0.0 (2)** after it finishes processing in TestFlight. Do not attach build 1 again.
+Attach **1.0.0 (3)** after it finishes processing in TestFlight. Builds 1 and 2 were already uploaded on 18 Oct. Internal testers must be App Store Connect users. `dkdevongray@gmail.com` works. `devon@superimmersive.io` was rejected. Do not start an external beta while `BETA_CONTRACT_MISSING` is set, and do not accept the agreement to clear it.
