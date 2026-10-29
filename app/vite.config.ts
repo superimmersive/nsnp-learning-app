@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { copyFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { copyFileSync, mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
@@ -37,16 +38,79 @@ function baseForMode(mode: string): string {
   return mode === 'native' ? '/' : siteBase()
 }
 
+/**
+ * Other top-level website paths. Each gets a copy of index.html so GitHub Pages
+ * returns 200. Privacy is not in this list: that URL is the static notice.
+ */
+const spaTopLevelRoutes = ['checklists', 'deadlines', 'calculator', 'certificate', 'prototype', 'join', 'officials']
+
+function privacyHtml(homeHref: string): string {
+  const script = path.join(rootDir, 'scripts/print-privacy-html.ts')
+  const result = spawnSync(process.execPath, ['--experimental-strip-types', script, homeHref], { encoding: 'utf8' })
+  if (result.error) throw result.error
+  if (result.status !== 0) {
+    throw new Error(result.stderr || `privacy page renderer exited ${result.status}`)
+  }
+  if (!result.stdout.startsWith('<!doctype html>')) {
+    throw new Error('privacy page renderer did not return html')
+  }
+  return result.stdout
+}
+
+/**
+ * GitHub Pages serves 404.html with status 404. The store privacy URL has to be
+ * a real file so /privacy and /privacy/ return 200 with no JavaScript.
+ */
+function staticPrivacyPages(): Plugin {
+  let base = '/'
+  let dist = path.resolve(rootDir, 'dist')
+  return {
+    name: 'nsnp-static-privacy',
+    apply: 'build',
+    configResolved(config) {
+      base = config.base
+      dist = path.resolve(config.root, config.build.outDir)
+    },
+    closeBundle() {
+      const html = privacyHtml(base)
+      mkdirSync(path.join(dist, 'privacy'), { recursive: true })
+      writeFileSync(path.join(dist, 'privacy', 'index.html'), html)
+      writeFileSync(path.join(dist, 'privacy.html'), html)
+    },
+  }
+}
+
+/** Optional. Direct visits to the other top-level routes return the SPA shell with 200. */
+function spaRouteEntries(): Plugin {
+  let dist = path.resolve(rootDir, 'dist')
+  return {
+    name: 'nsnp-spa-route-entries',
+    apply: 'build',
+    configResolved(config) {
+      dist = path.resolve(config.root, config.build.outDir)
+    },
+    closeBundle() {
+      const index = path.join(dist, 'index.html')
+      for (const route of spaTopLevelRoutes) {
+        const directory = path.join(dist, route)
+        mkdirSync(directory, { recursive: true })
+        copyFileSync(index, path.join(directory, 'index.html'))
+      }
+    },
+  }
+}
+
 function precacheServiceWorker(): Plugin {
   let base = '/'
+  let dist = path.resolve(rootDir, 'dist')
   return {
     name: 'nsnp-precache-sw',
     apply: 'build',
     configResolved(config) {
       base = config.base
+      dist = path.resolve(config.root, config.build.outDir)
     },
     closeBundle() {
-      const dist = path.resolve(rootDir, 'dist')
       const prefix = base === '/' ? '' : base.replace(/\/$/, '')
       const files = walkFiles(dist)
         .map((file) => `${prefix}/${path.relative(dist, file).split(path.sep).join('/')}`)
@@ -127,7 +191,7 @@ export default defineConfig(({ mode }) => ({
   plugins:
     mode === 'native'
       ? [react(), tailwindcss()]
-      : [react(), tailwindcss(), precacheServiceWorker()],
+      : [react(), tailwindcss(), staticPrivacyPages(), spaRouteEntries(), precacheServiceWorker()],
   resolve: {
     alias: {
       '@': path.join(rootDir, 'src'),
