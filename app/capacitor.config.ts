@@ -2,7 +2,8 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 /**
  * Native shell for the NSNP learning app.
- * Version 1.0.0 / build 1 lives in the Android and iOS projects, not here.
+ * Version 1.0.0 lives in the Android and iOS projects, not here.
+ * The next store upload is Android versionCode 2 and iOS build 3.
  * Do not put keystore passwords, API keys, or signing identifiers in this file.
  */
 const config: CapacitorConfig = {

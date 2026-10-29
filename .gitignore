@@ -4,3 +4,11 @@ api/.env
 *.env
 !.env.example
 !api/.env.example
+
+# Signing material. The Play upload key stays on the Mac.
+*.jks
+*.keystore
+**/keystore.properties
+*.p8
+*.p12
+*.mobileprovision

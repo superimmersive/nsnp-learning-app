@@ -6,10 +6,67 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+// Same lookup as the 18 Oct bundle: NSNP_* env vars, otherwise keystore.properties.
 def releaseStoreFile = System.getenv("NSNP_STORE_FILE") ?: keystoreProperties.getProperty("storeFile")
 def releaseStorePassword = System.getenv("NSNP_STORE_PASSWORD") ?: keystoreProperties.getProperty("storePassword")
 def releaseKeyAlias = System.getenv("NSNP_KEY_ALIAS") ?: keystoreProperties.getProperty("keyAlias")
 def releaseKeyPassword = System.getenv("NSNP_KEY_PASSWORD") ?: keystoreProperties.getProperty("keyPassword")
+
+// VersionCode 1 on Play was signed with this certificate. Do not accept another.
+def expectedUploadSha1 = "69:D4:67:3D:AA:1B:F6:71:C5:A1:E7:65:FE:FA:D5:B7:B8:BA:9E:CA"
+if (releaseStoreFile) {
+    def store = rootProject.file(releaseStoreFile)
+    if (!store.isFile()) {
+        throw new GradleException("Upload keystore not found at ${store}. Use /Users/devonk/keys/nsnp-upload.keystore (alias nsnp). Do not create a new one.")
+    }
+    if (releaseKeyAlias != "nsnp") {
+        throw new GradleException("keyAlias must be nsnp. Do not create a new upload key.")
+    }
+    if (!releaseStorePassword || !releaseKeyPassword) {
+        throw new GradleException("Set storePassword and keyPassword in android/keystore.properties, or NSNP_STORE_PASSWORD and NSNP_KEY_PASSWORD.")
+    }
+    java.security.KeyStore keyStore = null
+    Exception keyStoreError = null
+    for (String type : ["PKCS12", "JKS"]) {
+        try {
+            def candidate = java.security.KeyStore.getInstance(type)
+            store.withInputStream { stream ->
+                candidate.load(stream, releaseStorePassword.toCharArray())
+            }
+            keyStore = candidate
+            break
+        } catch (Exception e) {
+            keyStoreError = e
+        }
+    }
+    if (keyStore == null) {
+        throw new GradleException("Could not open the upload keystore. Check storePassword. ${keyStoreError?.message}")
+    }
+    def cert = keyStore.getCertificate("nsnp")
+    if (cert == null) {
+        throw new GradleException("Alias nsnp is not in ${store}.")
+    }
+    def sha1Bytes = java.security.MessageDigest.getInstance("SHA-1").digest(cert.encoded)
+    def actualSha1 = sha1Bytes.collect { byte b -> String.format("%02X", b & 0xff) }.join(":")
+    if (actualSha1 != expectedUploadSha1) {
+        throw new GradleException("Refusing to sign. Expected upload SHA-1 ${expectedUploadSha1}, found ${actualSha1}. Do not generate a replacement key.")
+    }
+}
+
+def packageVersion = "1.0.0"
+def packageJsonFile = rootProject.file("../package.json")
+if (packageJsonFile.exists()) {
+    def parsed = new groovy.json.JsonSlurper().parse(packageJsonFile)
+    if (parsed.version) packageVersion = parsed.version.toString()
+}
+
+// Internal testing already published versionCode 1 (versionName 1.0.0) on 18 Oct 2026.
+// Play rejects a second upload of the same versionCode. Sign with the same upload key.
+def releaseVersionCode = (System.getenv("NSNP_VERSION_CODE") ?: "2").toInteger()
+def releaseVersionName = System.getenv("NSNP_VERSION_NAME") ?: packageVersion
+if (releaseVersionCode < 2) {
+    throw new GradleException("NSNP_VERSION_CODE must be 2 or higher. versionCode 1 is already on the Play internal testing track.")
+}
 
 android {
     namespace = "za.co.superimmersive.nsnp"
@@ -18,8 +75,8 @@ android {
         applicationId "za.co.superimmersive.nsnp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0.0"
+        versionCode releaseVersionCode
+        versionName releaseVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

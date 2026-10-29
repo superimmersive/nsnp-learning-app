@@ -1,0 +1,128 @@
+name: iOS TestFlight
+
+# Optional. Manual only. The Mac path is the one used on 18 Oct:
+# xcodebuild archive, then xcodebuild -exportArchive with
+# ~/builds/nsnp/ExportOptions.plist. This job repeats that flow.
+# It does not use fastlane. A hosted runner has no Mac keychain, so it also
+# needs the distribution certificate secrets below.
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_number:
+        description: CURRENT_PROJECT_VERSION. Builds 1 and 2 were uploaded on 18 Oct. Use 3 or higher.
+        required: true
+        default: "3"
+      version_name:
+        description: MARKETING_VERSION
+        required: true
+        default: "1.0.0"
+
+jobs:
+  testflight:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install and sync
+        working-directory: app
+        run: |
+          npm ci
+          npm run cap:sync
+
+      - name: Write the App Store Connect API key
+        env:
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+        run: |
+          if [ -z "$ASC_KEY_CONTENT" ]; then
+            echo "Missing secret ASC_KEY_CONTENT (AuthKey_S78XAXRG43.p8)."
+            exit 1
+          fi
+          printf '%s\n' "$ASC_KEY_CONTENT" > "$RUNNER_TEMP/AuthKey.p8"
+
+      - name: Import the distribution certificate
+        env:
+          IOS_DISTRIBUTION_CERTIFICATE_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          IOS_DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+        run: |
+          if [ -z "$IOS_DISTRIBUTION_CERTIFICATE_BASE64" ] || [ -z "$IOS_DISTRIBUTION_CERTIFICATE_PASSWORD" ]; then
+            echo "Missing IOS_DISTRIBUTION_CERTIFICATE_BASE64 or its password."
+            echo "The 18 Oct Mac already has this keychain. A GitHub runner does not."
+            exit 1
+          fi
+          printf '%s' "$IOS_DISTRIBUTION_CERTIFICATE_BASE64" | base64 -d > "$RUNNER_TEMP/distribution.p12"
+          security create-keychain -p "" "$RUNNER_TEMP/build.keychain"
+          security default-keychain -s "$RUNNER_TEMP/build.keychain"
+          security unlock-keychain -p "" "$RUNNER_TEMP/build.keychain"
+          security import "$RUNNER_TEMP/distribution.p12" -k "$RUNNER_TEMP/build.keychain" -P "$IOS_DISTRIBUTION_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$RUNNER_TEMP/build.keychain"
+
+      - name: Write ExportOptions.plist
+        run: |
+          # Same keys as ~/builds/nsnp/ExportOptions.plist on the Mac. Not a second copy in git.
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>destination</key>
+            <string>upload</string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+            <key>teamID</key>
+            <string>U5DGDWXQCP</string>
+            <key>manageAppVersionAndBuildNumber</key>
+            <false/>
+          </dict>
+          </plist>
+          PLIST
+
+      - name: Archive and upload
+        working-directory: app/ios/App
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          IOS_BUILD_NUMBER: ${{ inputs.build_number }}
+          IOS_VERSION: ${{ inputs.version_name }}
+        run: |
+          if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ]; then
+            echo "Missing ASC_KEY_ID or ASC_ISSUER_ID. The key id used on 18 Oct is S78XAXRG43."
+            exit 1
+          fi
+          case "$IOS_BUILD_NUMBER" in
+            ''|*[!0-9]*) echo "Build number must be an integer."; exit 1 ;;
+          esac
+          if [ "$IOS_BUILD_NUMBER" -lt 3 ]; then
+            echo "CURRENT_PROJECT_VERSION must be 3 or higher. Builds 1 and 2 were uploaded on 18 Oct."
+            exit 1
+          fi
+          xcodebuild -project App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/NSNP.xcarchive" \
+            DEVELOPMENT_TEAM=U5DGDWXQCP \
+            CODE_SIGN_STYLE=Automatic \
+            CURRENT_PROJECT_VERSION="$IOS_BUILD_NUMBER" \
+            MARKETING_VERSION="$IOS_VERSION" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
+            archive
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/NSNP.xcarchive" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath "$RUNNER_TEMP/AuthKey.p8" \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
