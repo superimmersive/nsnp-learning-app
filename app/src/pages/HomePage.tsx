@@ -126,7 +126,12 @@ export function HomePage() {
         <p>
           {copy.presenters}: {content.meta.presenters.join(' and ')}. {content.meta.audience}.
         </p>
-        <p className="mt-2">{content.ui.installHint}</p>
+        {import.meta.env.MODE !== 'native' && <p className="mt-2">{content.ui.installHint}</p>}
+        <p className="mt-2">
+          <Link to="/privacy" className="font-semibold text-blue">
+            Privacy
+          </Link>
+        </p>
       </footer>
     </div>
   )

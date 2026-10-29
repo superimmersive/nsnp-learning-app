@@ -35,58 +35,38 @@ Native builds use `npm run build:native` (`vite build --mode native`):
 - Hash routes (`/#/module/...`) so lessons open offline from files packed in the app. The website keeps normal URLs.
 - No service worker in the apps. Every lesson and illustration is in the binary.
 
-Display name **NSNP Learning**. iOS bundle id and Android `applicationId` are `za.co.superimmersive.nsnp`. Version **1.0.0**, build **1**.
+Display name **NSNP Learning**. iOS bundle id and Android `applicationId` are `za.co.superimmersive.nsnp`. User-facing version **1.0.0**. The next store upload is iOS build **2** and Android `versionCode` **2**. Build 1 of each is already on TestFlight and Play internal testing. Do not create a new upload keystore. The hand steps and the assumptions behind them are in `store/RELEASE.md`.
 
-From `app/` (Node.js 22+, JDK 21; iOS needs a Mac with Xcode 26+):
+From `app/` (Node.js 22+, JDK 21; iOS needs a Mac with Xcode):
 
 ```bash
 npm ci
 npm run cap:sync
 ```
 
-`cap:sync` rebuilds the web bundle and copies it into `android/` and `ios/`. Those copies are gitignored. Do not commit keystores, `keystore.properties`, certificates, provisioning profiles, or API keys.
+`cap:sync` rebuilds the web bundle and copies it into the existing `android/` and `ios/` projects. Those copies are gitignored. Do not run `npx cap add`. Do not commit keystores, `keystore.properties`, certificates, provisioning profiles, or API keys.
 
 ### Signed Android App Bundle
 
+Copy `app/android/keystore.properties.example` to `app/android/keystore.properties` and fill the passwords for the existing key at `/Users/devonk/keys/nsnp-upload.keystore`, alias `nsnp`. Then, with JDK 21:
+
 ```bash
-mkdir -p "$HOME/keys"
-keytool -genkeypair -v \
-  -keystore "$HOME/keys/nsnp-upload.keystore" \
-  -alias nsnp \
-  -keyalg RSA -keysize 2048 -validity 10000
-
-export NSNP_STORE_FILE="$HOME/keys/nsnp-upload.keystore"
-export NSNP_STORE_PASSWORD='your-store-password'
-export NSNP_KEY_ALIAS=nsnp
-export NSNP_KEY_PASSWORD='your-key-password'
-
 cd app
-npm run cap:sync
-cd android
-./gradlew bundleRelease
+npm run android:aab
 ```
 
-Upload `app/android/app/build/outputs/bundle/release/app-release.aab`. The same values can live in `app/android/keystore.properties` (see `keystore.properties.example`), which is gitignored.
+That runs `build:native`, syncs into the existing Android project, and runs `bundleRelease`. Gradle refuses a key whose SHA-1 is not `69:D4:67:3D:AA:1B:F6:71:C5:A1:E7:65:FE:FA:D5:B7:B8:BA:9E:CA`. Without `keystore.properties`, the same command builds an unsigned AAB, which Play will not accept.
 
 ### iOS archive for TestFlight
 
-The bundle id matches the App Store Connect app **NSNP Learning**. On the Mac:
+The existing Xcode project is `app/ios/App/App.xcodeproj` (Swift packages, not CocoaPods). Team `U5DGDWXQCP`, automatic signing, marketing version 1.0.0, build 2. The scene delegate is already in the project. On the Mac, from `app/ios`:
 
 ```bash
-cd app
-npm ci
-npm run cap:sync
-cd ios/App
-xcodebuild -project App.xcodeproj -scheme App -configuration Release \
-  -destination 'generic/platform=iOS' \
-  -archivePath "$HOME/nsnp/NSNP-Learning.xcarchive" \
-  DEVELOPMENT_TEAM=YOUR_TEAM_ID \
-  archive
+bundle install
+bundle exec fastlane beta
 ```
 
-Open `App.xcodeproj` (Swift Package Manager, not CocoaPods). Then in Xcode: Window → Organizer → Distribute App → App Store Connect → Upload. `npm run cap:open:ios` opens the same project.
-
-The icon source is `app/assets/logo.svg`. Regenerate with `npm run assets:native`. More detail is in `app/README.md`.
+`ASC_KEY_ID`, `ASC_ISSUER_ID`, and `ASC_KEY_PATH` or `ASC_KEY_CONTENT` must be set. Do not commit the `.p8` file. Details are in `store/RELEASE.md`.
 
 ## Trial API
 

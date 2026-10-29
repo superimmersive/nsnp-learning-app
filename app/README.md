@@ -55,9 +55,10 @@ The native apps are the same Vite project inside a [Capacitor 8](https://capacit
 | Display name | NSNP Learning |
 | iOS bundle id and Android applicationId | `za.co.superimmersive.nsnp` |
 | Version | 1.0.0 |
-| Build number | 1 (`versionCode` on Android, `CURRENT_PROJECT_VERSION` on iOS) |
+| Next Android `versionCode` | 2 (1 is already on Play internal testing) |
+| Next iOS build | 2 (1.0.0 (1) is already on internal TestFlight) |
 
-The native projects live in `android/` and `ios/`. `npm run cap:sync` rebuilds the web bundle and copies it in. Those copies are gitignored, so run sync before every native build. Node.js 22 or newer and JDK 21 are required. iOS archives need a Mac with Xcode 26 or newer. No keystore, certificate, or API key belongs in this repo.
+The native projects already live in `android/` and `ios/`. Do not recreate them. `npm run cap:sync` rebuilds the web bundle and copies it in. Those copies are gitignored, so run sync before every native build. Node.js 22 or newer and JDK 21 are required. iOS archives need a Mac with Xcode. No keystore, certificate, or API key belongs in this repo. Hand steps are in `../store/RELEASE.md`.
 
 ### Sync
 
@@ -68,57 +69,25 @@ npm run cap:sync
 
 ### Signed Android App Bundle
 
-Create the upload keystore once and keep it outside the repo:
+Use the existing upload key. Do not run `keytool -genkeypair`. Copy `android/keystore.properties.example` to `android/keystore.properties` (gitignored) and set the passwords. `storeFile` is `/Users/devonk/keys/nsnp-upload.keystore` and `keyAlias` is `nsnp`. If that file is absent, Gradle falls back to `NSNP_STORE_FILE`, `NSNP_STORE_PASSWORD`, `NSNP_KEY_ALIAS`, and `NSNP_KEY_PASSWORD`.
 
 ```bash
-mkdir -p "$HOME/keys"
-keytool -genkeypair -v \
-  -keystore "$HOME/keys/nsnp-upload.keystore" \
-  -alias nsnp \
-  -keyalg RSA -keysize 2048 -validity 10000
+npm run android:aab
 ```
 
-Point Gradle at it with environment variables:
-
-```bash
-export NSNP_STORE_FILE="$HOME/keys/nsnp-upload.keystore"
-export NSNP_STORE_PASSWORD='your-store-password'
-export NSNP_KEY_ALIAS=nsnp
-export NSNP_KEY_PASSWORD='your-key-password'
-```
-
-Or copy `android/keystore.properties.example` to `android/keystore.properties` (gitignored) and fill in the same values. `storeFile` is relative to `android/`, or an absolute path.
-
-```bash
-npm run cap:sync
-cd android
-./gradlew bundleRelease
-```
-
-The bundle is `android/app/build/outputs/bundle/release/app-release.aab`. Upload that in Play Console. `npm run cap:open:android` opens the same project in Android Studio.
-
-Each Play upload needs a higher `versionCode` in `android/app/build.gradle`. The first release is `1` / `1.0.0`.
+The bundle is `android/app/build/outputs/bundle/release/app-release.aab`, versionCode 2, versionName 1.0.0. `npm run cap:open:android` opens the same project in Android Studio. JDK 21, same as the 18 Oct build.
 
 ### iOS archive for TestFlight
 
-The bundle id `za.co.superimmersive.nsnp` matches the App Store Connect app **NSNP Learning**. On the Mac:
+The bundle id `za.co.superimmersive.nsnp` is the existing App Store Connect app **NSNP Learning**. Build 1.0.0 (1) is already on internal TestFlight, so the project is now build 2. Team `U5DGDWXQCP` is set on the target with automatic signing. Do not create a second Xcode project.
 
 ```bash
-npm ci
-npm run cap:sync
-cd ios/App
-xcodebuild -project App.xcodeproj -scheme App -configuration Release \
-  -destination 'generic/platform=iOS' \
-  -archivePath "$HOME/nsnp/NSNP-Learning.xcarchive" \
-  DEVELOPMENT_TEAM=YOUR_TEAM_ID \
-  archive
+cd ios
+bundle install
+bundle exec fastlane beta
 ```
 
-Open `App.xcodeproj` (Swift packages, so there is no CocoaPods workspace). The first archive downloads the Capacitor Swift package. Signing is automatic for `YOUR_TEAM_ID`; certificates and profiles stay on the Mac.
-
-Upload the archive from Xcode: Window → Organizer → Distribute App → App Store Connect → Upload. In App Store Connect, the build appears under TestFlight. Version 1.0.0, build 1 is already set. The next upload needs a higher build number (`CURRENT_PROJECT_VERSION` in the Xcode target, and `versionCode` on Android if you ship both).
-
-`npm run cap:open:ios` opens the project in Xcode, where Product → Archive does the same archive step.
+Open `App.xcodeproj` (Swift packages, so there is no CocoaPods workspace). `npm run cap:open:ios` opens that project. Product → Archive uses the same scheme. The scene delegate and privacy manifest are already in the app target. See `../store/RELEASE.md`.
 
 ### Icon and splash
 

@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "build:native": "tsc -b && vite build --mode native",
     "cap:sync": "npm run build:native && cap sync",
+    "android:aab": "npm run cap:sync && cd android && ./gradlew bundleRelease",
     "cap:open:android": "cap open android",
     "cap:open:ios": "cap open ios",
     "assets:native": "node scripts/render-logo.mjs && capacitor-assets generate --ios --android --iconBackgroundColor '#0b2545' --iconBackgroundColorDark '#0b2545' --splashBackgroundColor '#0b2545' --splashBackgroundColorDark '#07182e' --logoSplashScale 0.4",

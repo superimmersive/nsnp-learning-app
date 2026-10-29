@@ -51,6 +51,14 @@ describe('app smoke', () => {
     expect(renderAt('/join/phone')).toContain('Saved on this phone')
   })
 
+  it('explains that the store apps have no account', () => {
+    const html = renderAt('/privacy')
+    expect(html).toContain('lessons only')
+    expect(html).toContain('no login')
+    expect(html).toContain('Clear progress on this phone')
+    expect(html).toContain('Delete what is on the phone')
+  })
+
   it('opens the district dashboard on its own route', () => {
     const html = renderAt('/officials')
     expect(html).toContain('Example data - trial prototype')

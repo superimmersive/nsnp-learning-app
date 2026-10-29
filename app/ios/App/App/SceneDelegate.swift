@@ -1,6 +1,10 @@
 import UIKit
 import Capacitor
 
+// Scene lifecycle required by the Xcode 27 / iOS 27 SDK. Without
+// UIApplicationSceneManifest plus this delegate, the process is killed at launch.
+// This matches the Capacitor 8.5 SPM template: a window, CAPBridgeViewController,
+// then SceneDelegateProxy so plugins still see URLs. Do not delete it on `cap sync`.
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
