@@ -48,7 +48,7 @@ The native apps are the same Vite project inside a [Capacitor 8](https://capacit
 
 - The asset base is `/`, because the WebView serves the bundle from its own root. The Pages build keeps the repository subpath.
 - Routing uses the URL hash (`/#/module/...`). Lesson links then resolve to files that are already in the app. The website keeps normal paths.
-- The service worker is left out. Pages still generate `sw.js`, `404.html`, and `.nojekyll`.
+- The service worker is left out. Pages still generate `sw.js`, `404.html`, and `.nojekyll`. The Pages build also writes a script-free `privacy/index.html` and `privacy.html`, and copies `index.html` into the other top-level routes so those links return 200.
 
 | | |
 | --- | --- |

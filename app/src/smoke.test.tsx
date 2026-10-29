@@ -55,8 +55,14 @@ describe('app smoke', () => {
     const html = renderAt('/privacy')
     expect(html).toContain('lessons only')
     expect(html).toContain('no login')
+    expect(html).toContain('collect no data and share no data')
+    expect(html).toContain('They do not track')
     expect(html).toContain('Clear progress on this phone')
     expect(html).toContain('Delete what is on the phone')
+    expect(html).toContain('Website trial accounts')
+    expect(html).toContain('outside South Africa')
+    expect(html).toContain('SUPERIMMERSIVE ART (PTY) LTD')
+    expect(html).toContain('devon@superimmersive.io')
   })
 
   it('opens the district dashboard on its own route', () => {
