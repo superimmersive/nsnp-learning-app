@@ -5,6 +5,11 @@ export function isNativeBuild(mode: string): boolean {
   return mode === NATIVE_MODE
 }
 
+/** The trial help guides are for the website. The native lesson build does not show them. */
+export function showWebHelp(mode: string): boolean {
+  return mode !== NATIVE_MODE
+}
+
 /**
  * Basename for the GitHub Pages / local web app.
  * `import.meta.env.BASE_URL` is always `/` or a subpath with a trailing slash.

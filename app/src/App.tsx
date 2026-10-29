@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router'
 import { AppShell } from '@/components/AppShell'
 import { ProgressProvider } from '@/context/ProgressContext'
@@ -28,6 +29,9 @@ import { DeadlinesPage } from '@/pages/DeadlinesPage'
 import { HomePage } from '@/pages/HomePage'
 import { ModulePage } from '@/pages/ModulePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+
+// The native lesson build drops this import. Guides stay on the website.
+const HelpPage = import.meta.env.MODE === 'native' ? null : lazy(() => import('@/pages/HelpPage'))
 
 function SchoolApp() {
   return (
@@ -65,6 +69,16 @@ export default function App() {
       </Route>
       <Route element={<SchoolApp />}>
         <Route index element={<HomePage />} />
+        {HelpPage && (
+          <Route
+            path="help"
+            element={
+              <Suspense fallback={<p>Loading the guides.</p>}>
+                <HelpPage />
+              </Suspense>
+            }
+          />
+        )}
         <Route path="module/:moduleId" element={<ModulePage />} />
         <Route path="checklists" element={<ChecklistsPage />} />
         <Route path="checklists/:checklistId" element={<ChecklistPage />} />

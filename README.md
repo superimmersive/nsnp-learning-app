@@ -24,6 +24,7 @@ short modules, quizzes, checklists and printable forms.
 - `reference/` original PDF and slide previews (`slides/`)
 - `content/` extracted text and module scripts
 - `app/` web app source, plus the Capacitor `android/` and `ios/` projects
+- `docs/guides/` trial instructions for coordinators and district officials, with PDFs in `docs/guides/pdf/`
 
 ## Android and iOS
 

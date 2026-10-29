@@ -57,7 +57,14 @@ export function AppShell() {
               <span className="block truncate text-xs text-white/70">{content.meta.districtShort}</span>
             </span>
           </NavLink>
-          <span className="shrink-0 text-sm font-semibold text-gold-bright">{content.meta.year}</span>
+          <span className="flex shrink-0 items-center gap-3">
+            {import.meta.env.MODE !== 'native' && (
+              <NavLink to="/help" className="text-sm font-semibold text-white/80">
+                Help
+              </NavLink>
+            )}
+            <span className="text-sm font-semibold text-gold-bright">{content.meta.year}</span>
+          </span>
         </div>
         <div className="h-1 bg-white/15" aria-hidden="true">
           <div className="h-full bg-gold-bright" style={{ width: `${percent}%` }} />
